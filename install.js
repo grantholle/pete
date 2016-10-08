@@ -2,7 +2,6 @@
 
 let overwriteConfig = true,
     overwriteShows = true,
-    overwriteDownloads = true,
     res = {
       config: false,
       library: false
@@ -14,11 +13,9 @@ const fs = require('fs'),
       util = require('util'),
       mkdirp = require('mkdirp'),
       jsonfile = require('jsonfile'),
-      sqlite = require('sqlite3'),
       https = require('https'),
       configDir = p.join(os.homedir(), '.config', 'cloud-city'),
       configPath = p.join(configDir, 'config.json'),
-      showsDb = new sqlite.Database(p.join(configDir, 'shows.db')),
       prompt = require('prompt'),
       colors = require('colors'),
       open = require('open'),
@@ -26,6 +23,7 @@ const fs = require('fs'),
       eztv = new EZTV(),
       winston = require('./lib/logger'),
       installationMessage = '\nInstallation complete! '.blue,
+      abortMessage = '\nInstallation aborted!'.red,
       createShows = 'create table if not exists shows (tmdb_id integer primary key, name varchar(255), start_season integer, start_episode integer, desired_quality varchar(10), eztv text)',
       createDownloads = 'create table if not exists downloads (id integer primary key, tmdb_id integer, name varchar(255), episode integer, season integer, transmission_id integer, download_dir varchar(255), foreign key (tmdb_id) references shows(tmdb_id))',
 
@@ -123,7 +121,7 @@ const fs = require('fs'),
           if (err)
             throw err
 
-          winston.info(`Created ${filePath}`.green)
+          winston.info(`Created ${filePath}`)
           cb()
         })
       },
@@ -170,7 +168,7 @@ const fs = require('fs'),
         require('./lib/tv-setup')
       },
 
-      install = () =>
+      install = () => {
         if (overwriteConfig) {
           prompt.get(promptSchema, (err, result) => {
             let config = {
@@ -224,15 +222,10 @@ const fs = require('fs'),
 
                     // Finally write the configs
                     createConfigDir(() => {
-                      createFile(configPath, config, () => {
-                        if (!overwriteShows)
-                          winston.info(installationMessage)
-                      })
+                      const showsDb = require('./lib/shows-db')
 
                       // Create the databases if they don't exist
-                      showsDb.run(createShows, [], () => {
-                        showsDb.run(createDownloads)
-                      })
+                      showsDb.createDbs()
 
                       // Get the EZTV showlist to cache
                       createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
@@ -241,13 +234,14 @@ const fs = require('fs'),
                           jsonfile.spaces = 2
                           jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
                             winston.info('EZTV showlist cached')
+                            winston.info(installationMessage)
                           })
                         })
                       })
                     })
                   })
                 } else {
-                  return winston.info('\nInstallation aborted!'.red)
+                  return winston.info(abortMessage)
                 }
               })
             })
@@ -272,39 +266,43 @@ fs.stat(configPath, (err, stat) => {
     const schema = [
       {
         name: 'config',
-        description: 'Overwrite current configuration?'
+        description: 'Overwrite current configuration? [y/n]'
       },
       {
         name: 'downloads',
-        description: 'Remove show download history?'
+        description: 'Remove show download history? [y/n]'
       },
       {
         name: 'shows',
-        description: 'Overwrite entire shows configuration?'
+        description: 'Overwrite entire shows configuration? [y/n]'
       }
     ]
 
     winston.info('Config files detected!'.yellow)
     prompt.confirm(schema[0], (err, result) => {
       if (err)
-        return winston.info('\nInstallation aborted!'.red)
+        return winston.info(abortMessage)
 
       overwriteConfig = result
 
       prompt.confirm(schema[1], (err, result) => {
         if (err)
-          return winston.info('\nInstallation aborted!'.red)
+          return winston.info(abortMessage)
+
+        const shows = require('./lib/shows-db')
 
         if (result) {
-          showsDb.run('drop table if exists downloads')
+          shows.db.run('drop table if exists downloads')
         }
 
         prompt.confirm(schema[2], (err, result) => {
           if (err)
-            return winston.info('\nInstallation aborted!'.red)
+            return winston.info(abortMessage)
+
+          overwriteShows = result
 
           if (result) {
-            showsDb.run('drop table if exists shows')
+            shows.db.run('drop table if exists shows')
           }
 
           install()
