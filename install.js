@@ -2,6 +2,7 @@
 
 let overwriteConfig = true,
     overwriteShows = true,
+    overwriteDownloads = true,
     res = {
       config: false,
       library: false
@@ -13,17 +14,20 @@ const fs = require('fs'),
       util = require('util'),
       mkdirp = require('mkdirp'),
       jsonfile = require('jsonfile'),
+      sqlite = require('sqlite3'),
       https = require('https'),
       configDir = p.join(os.homedir(), '.config', 'cloud-city'),
       configPath = p.join(configDir, 'config.json'),
-      showsPath = p.join(configDir, 'shows.json'),
+      showsDb = new sqlite.Database(p.join(configDir, 'shows.db')),
       prompt = require('prompt'),
       colors = require('colors'),
       open = require('open'),
       EZTV = require("eztv-api-pt"),
       eztv = new EZTV(),
       winston = require('./lib/logger'),
-      installationMessage = '\nInstallation complete! '.bold.blue,
+      installationMessage = '\nInstallation complete! '.blue,
+      createShows = 'create table if not exists shows (tmdb_id integer primary key, name varchar(255), start_season integer, start_episode integer, desired_quality varchar(10), eztv text)',
+      createDownloads = 'create table if not exists downloads (id integer primary key, tmdb_id integer, name varchar(255), episode integer, season integer, transmission_id integer, download_dir varchar(255), foreign key (tmdb_id) references shows(tmdb_id))',
 
       promptSchema = [
         {
@@ -164,6 +168,96 @@ const fs = require('fs'),
 
       setupTvShows = () => {
         require('./lib/tv-setup')
+      },
+
+      install = () =>
+        if (overwriteConfig) {
+          prompt.get(promptSchema, (err, result) => {
+            let config = {
+              tmdb: {
+                apiKey: result.apiKey
+              },
+              pushbullet: {
+                token: result.pbToken
+              },
+              transmission: {
+                user: result.user,
+                pw: result.pw,
+                host: result.host,
+                port: result.port
+              },
+              dir: {
+                movies: result.moviesDir,
+                tv: result.tvDir
+              },
+              movies: {
+                quality: result.movieQuality,
+                useYify: result.useYify,
+                fallback: result.fallback
+              }
+            }
+
+            // Get a token
+            getTmdbToken(config.tmdb.apiKey, res => {
+              if (res.success === false)
+                return winston.error(res.status_message)
+
+              const tokenUrl = `https://www.themoviedb.org/authenticate/${res.request_token}`
+
+              // The user has to authenticate this app before they can use the TMdb api
+              winston.info(`Please visit the following URL to authorize the app, then press ENTER to resume installation:\n`.green)
+              winston.info(`\t${tokenUrl}\n`.magenta)
+              open(tokenUrl)
+              prompt.start()
+
+              // Wait for the user to have authenticated, then get the session ID
+              prompt.confirm('Continue [yes/no]', (err, input) => {
+
+                if (input) {
+                  // Get the session id
+                  getTmdbSession(config.tmdb.apiKey, res.request_token, res => {
+                    if (res.success === false)
+                      return winston.error(res.status_message)
+
+                    // Set the session ID
+                    config.tmdb.sessionId = res.session_id
+
+                    // Finally write the configs
+                    createConfigDir(() => {
+                      createFile(configPath, config, () => {
+                        if (!overwriteShows)
+                          winston.info(installationMessage)
+                      })
+
+                      // Create the databases if they don't exist
+                      showsDb.run(createShows, [], () => {
+                        showsDb.run(createDownloads)
+                      })
+
+                      // Get the EZTV showlist to cache
+                      createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
+                        winston.info('Retrieving EZTV showlist...')
+                        eztv.getAllShows().then(results => {
+                          jsonfile.spaces = 2
+                          jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
+                            winston.info('EZTV showlist cached')
+                          })
+                        })
+                      })
+                    })
+                  })
+                } else {
+                  return winston.info('\nInstallation aborted!'.red)
+                }
+              })
+            })
+          })
+        } else if (overwriteShows) {
+          // TV prompting
+          setupTvShows()
+        } else {
+          winston.info(installationMessage)
+        }
       }
 
 // Kick off the installation
@@ -178,111 +272,44 @@ fs.stat(configPath, (err, stat) => {
     const schema = [
       {
         name: 'config',
-        description: 'Overwrite config file?'
+        description: 'Overwrite current configuration?'
+      },
+      {
+        name: 'downloads',
+        description: 'Remove show download history?'
       },
       {
         name: 'shows',
-        description: 'Overwrite shows file?'
+        description: 'Overwrite entire shows configuration?'
       }
     ]
 
     winston.info('Config files detected!'.yellow)
     prompt.confirm(schema[0], (err, result) => {
+      if (err)
+        return winston.info('\nInstallation aborted!'.red)
+
       overwriteConfig = result
 
       prompt.confirm(schema[1], (err, result) => {
-        overwriteShows = result
+        if (err)
+          return winston.info('\nInstallation aborted!'.red)
 
-        install()
+        if (result) {
+          showsDb.run('drop table if exists downloads')
+        }
+
+        prompt.confirm(schema[2], (err, result) => {
+          if (err)
+            return winston.info('\nInstallation aborted!'.red)
+
+          if (result) {
+            showsDb.run('drop table if exists shows')
+          }
+
+          install()
+        })
       })
     })
   }
 })
-
-function install() {
-  if (overwriteConfig) {
-    prompt.get(promptSchema, (err, result) => {
-      let config = {
-        tmdb: {
-          apiKey: result.apiKey
-        },
-        pushbullet: {
-          token: result.pbToken
-        },
-        transmission: {
-          user: result.user,
-          pw: result.pw,
-          host: result.host,
-          port: result.port
-        },
-        dir: {
-          movies: result.moviesDir,
-          tv: result.tvDir
-        },
-        movies: {
-          quality: result.movieQuality,
-          useYify: result.useYify,
-          fallback: result.fallback
-        }
-      }
-
-      // Get a token
-      getTmdbToken(config.tmdb.apiKey, res => {
-        if (res.success === false)
-          return winston.error(res.status_message)
-
-        const tokenUrl = `https://www.themoviedb.org/authenticate/${res.request_token}`
-
-        // The user has to authenticate this app before they can use the TMdb api
-        winston.info(`Please visit the following URL to authorize the app, then press ENTER to resume installation:\n`.green)
-        winston.info(`\t${tokenUrl}\n`.magenta)
-        open(tokenUrl)
-        prompt.start()
-
-        // Wait for the user to have authenticated, then get the session ID
-        prompt.confirm('Continue [yes/no]', (err, input) => {
-
-          if (input) {
-            // Get the session id
-            getTmdbSession(config.tmdb.apiKey, res.request_token, res => {
-              if (res.success === false)
-                return winston.error(res.status_message)
-
-              // Set the session ID
-              config.tmdb.sessionId = res.session_id
-
-              // Finally write the configs
-              createConfigDir(() => {
-                createFile(configPath, config, () => {
-                  if (!overwriteShows)
-                    winston.info(installationMessage)
-                })
-
-                if (overwriteShows)
-                  createFile(showsPath, {}, setupTvShows)
-
-                // Get the EZTV showlist to cache
-                createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
-                  winston.info('Retrieving EZTV showlist...')
-                  eztv.getAllShows().then(results => {
-                    jsonfile.spaces = 2
-                    jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
-                      winston.info('EZTV showlist cached')
-                    })
-                  })
-                })
-              })
-            })
-          } else {
-            winston.info('\nInstallation aborted!'.red)
-          }
-        })
-      })
-    })
-  } else if (overwriteShows) {
-    // TV prompting
-    setupTvShows()
-  } else {
-    winston.info(installationMessage)
-  }
-}

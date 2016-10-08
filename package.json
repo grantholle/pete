@@ -1,11 +1,13 @@
 {
   "name": "cloud-city",
   "version": "1.0.0",
-  "description": "Automatically download your favorite TV shows and movies via Trakt and Transmission",
+  "description": "Automatically download your favorite TV shows and movies via TMdb and Transmission",
   "main": "index.js",
   "scripts": {
-    "install": "node bootstrap",
-    "tv": "node ./lib/tv-setup"
+    "install": "node install",
+    "setup": "node ./lib/tv-setup",
+    "fetch-shows": "node ./lib/tv",
+    "fetch-movies": "node ./lib/movies"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +23,7 @@
     "pushbullet": "^1.4.3",
     "rargb": "^0.1.1",
     "sanitize-filename": "^1.6.0",
+    "sqlite3": "^3.1.6",
     "transmission": "^0.4.5",
     "winston": "^2.2.0",
     "yify-search": "^1.0.0"
