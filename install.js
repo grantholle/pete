@@ -235,6 +235,7 @@ const fs = require('fs'),
                           jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
                             winston.info('EZTV showlist cached')
                             winston.info(installationMessage)
+                            showsDb.db.close()
                           })
                         })
                       })
