@@ -13,7 +13,7 @@
 
 const showsDb = require('./lib/shows-db'),
       moviedb = require('./lib/moviedb'),
-      add = false
+      add = true
 
 showsDb.getShows((err, shows) => {
   Object.keys(shows).forEach((item, index, array) => {
