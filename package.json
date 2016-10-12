@@ -1,16 +1,16 @@
 {
-  "name": "cloud-city",
+  "name": "pete",
   "version": "1.0.0",
   "description": "Automatically download your TMdb watchlists",
-  "main": "index.js",
+  "main": "install.js",
   "scripts": {
     "install": "node install",
     "setup": "node ./lib/tv-setup",
     "fetch-shows": "node ./lib/tv",
     "fetch-movies": "node ./lib/movies"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Grant Holle (grantholle.com)",
+  "license": "MIT",
   "dependencies": {
     "async": "^2.0.1",
     "eztv-api-pt": "^1.0.11",
