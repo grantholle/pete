@@ -236,6 +236,7 @@ const fs = require('fs'),
                             winston.info('EZTV showlist cached')
                             winston.info(installationMessage)
                             showsDb.db.close()
+                            setupTvShows()
                           })
                         })
                       })
