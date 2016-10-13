@@ -12,7 +12,7 @@
   "author": "Grant Holle (grantholle.com)",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.0.1",
+    "async": "^2.1.1",
     "eztv-api-pt": "^1.0.11",
     "jsonfile": "^2.4.0",
     "minimist": "^1.2.0",
