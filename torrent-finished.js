@@ -13,5 +13,5 @@ showsDb.db.get('select * from downloads where transmission_id = ?', [torrentId],
   const msg = `${show.show} ${label(show.season, show.episode)}, ${show.episode_name}, has finished downloading.`
 
   winston.info(msg)
-  notify(`Cloud City Notification - Torrent Finished`, msg)
+  notify(`Pete says, "Torrent finished!"`, msg)
 })
