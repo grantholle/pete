@@ -9,7 +9,8 @@
   "bin": {
     "pete": "index.js"
   },
-  "author": "Grant Holle (grantholle.com)",
+  "author": "Grant Holle (https://github.com/grantholle)",
+  "repository": "https://github.com/grantholle/pete",
   "license": "MIT",
   "dependencies": {
     "async": "^2.1.1",
@@ -21,7 +22,7 @@
     "open": "0.0.5",
     "prompt": "^1.0.0",
     "pushbullet": "^1.4.3",
-    "rargb": "^0.1.1",
+    "rargb": "^0.3.0",
     "sanitize-filename": "^1.6.0",
     "sqlite3": "^3.1.6",
     "transmission": "^0.4.5",
