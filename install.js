@@ -83,6 +83,7 @@ const fs = require('fs'),
           name: 'port',
           required: true,
           description: 'Transmission port',
+          type: 'integer',
           default: 9091
         },
         {
@@ -94,6 +95,18 @@ const fs = require('fs'),
           name: 'pbToken',
           required: false,
           description: 'Pushbullet api token'
+        },
+        {
+          name: 'notifyOnStart',
+          default: 'true',
+          description: 'Get a notification when a download is started?',
+          type: 'boolean'
+        },
+        {
+          name: 'notifyOnFinish',
+          default: 'true',
+          description: 'Get a notification when a download is finished?',
+          type: 'boolean'
         }
       ],
 
@@ -176,7 +189,9 @@ const fs = require('fs'),
                 apiKey: result.apiKey
               },
               pushbullet: {
-                token: result.pbToken
+                token: result.pbToken,
+                notifyOnStart: notifyOnStart,
+                notifyOnFinish: notifyOnFinish
               },
               transmission: {
                 user: result.user,
