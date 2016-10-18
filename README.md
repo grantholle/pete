@@ -1,6 +1,6 @@
 # Pete
 
-Automatically download TV shows and movies using [themoviedb.org](https://www.themoviedb.org/ "TMdb") watchlists and Transmission.
+Automatically download TV shows and movies using [themoviedb.org](https://www.themoviedb.org/ "TMdb") watchlists and [Transmission](https://transmissionbt.com/).
 
 This was made as sort of an opinionated alternative to Flexget automatically fetching TV shows and movies. Flexget is amazing and does so many things, but for the life of me could not get it configured to work well. So I made this instead.
 
