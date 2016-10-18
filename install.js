@@ -178,7 +178,7 @@ const fs = require('fs'),
       },
 
       setupTvShows = () => {
-        require('./lib/tv-setup')
+        require('./lib/tv-setup')()
       },
 
       install = () => {
@@ -254,7 +254,10 @@ const fs = require('fs'),
                             if (process.platform.toLowerCase() === 'linux') {
                               prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
                                 if (add) {
-                                  require('./lib/add-service-file')()
+                                  require('./lib/add-service-file')(() => {
+                                    winston.info(installationMessage)
+                                    setupTvShows()
+                                  })
                                 }
                               })
                             } else {
