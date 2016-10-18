@@ -57,21 +57,21 @@ Now you need to install Node. If you're using OSMC on a Pi, installing Node depe
 At the time of writing this, Node 6.8 is the latest. Version come out rather quickly so it won't take much time for this to become outdated. Pete will likely work with Node 4+ (untested, but an assumption), but was developed using version 6.4, so it's wise to use something in the 6's.
 
 Raspberry Pi Model A, B, B+ and Compute Module:
-```bash
+```
 wget https://nodejs.org/dist/v6.8.1/node-v6.8.1-linux-armv6l.tar.gz
 tar -xvf node-v6.8.1-linux-armv6l.tar.gz
 cd node-v6.8.1-linux-armv6l
 ```
 
 Raspberry Pi 2 and 3 Model B
-```bash
+```
 wget https://nodejs.org/dist/v6.8.1/node-v6.8.1-linux-armv7l.tar.gz
 tar -xvf node-v6.8.1-linux-armv7l.tar.gz
 cd node-v6.8.1-linux-armv7l
 ```
 
 Copy to /usr/local
-```bash
+```
 sudo cp -R * /usr/local/
 ```
 
@@ -87,7 +87,7 @@ You can also clone the [repository](https://github.com/grantholle/pete) and run 
 
 You can put it anywhere, but I'd suggest putting it in your home directory.
 
-```bash
+```
 cd ~
 git clone https://github.com/grantholle/pete.git
 cd pete
@@ -102,7 +102,7 @@ Once configuration is finished, it will prompt you to set up your TV show watchl
 
 All the configuration settings are stored in a json file in `~/.config/pete/config.json`. Feel free to either run `pete install` or `node install` in Pete's root directory. The settings are laid out as follows:
 
-```json
+```
 {
   "tmdb": {
     "apiKey": "" // TMdb API key
@@ -134,12 +134,12 @@ Each show's configuration is stored in a sqlite database at `~/.config/pete/show
 
 ## Usage
 
-| Global module   | Pete's root          | Description                                                                                           |
-| :-------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |                                                                                                                                                                                                                                  |
-| `pete install`  | `node install`       | Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings                                                                                                                      |
-| `pete tv-setup` | `node lib/tv-setup`  | Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.            |
-| `pete tv`       | `node lib/tv`        | Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality |
-| `pete movies`   | `node lib/movies`    | Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist                                                                                                                       |
+The following commands can be run using the global module `pete` if you installed it with `npm i -g pete` or if you cloned the directory, run them inside the pete's root directory.
+
+- `pete install`  | `node install`       | Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings.
+- `pete tv-setup` | `node lib/tv-setup`  | Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.
+- `pete tv`       | `node lib/tv`        | Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
+- `pete movies`   | `node lib/movies`    | Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist.
 
 If you've installed Pete on a Linux platform (such as OSMC), it will have prompted you to add a service file. This adds the ability to start Pete as a daemon on startup. It will check your TV show watchlist every hour and your movie watchlist every minute.
 
