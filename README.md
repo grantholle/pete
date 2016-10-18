@@ -8,6 +8,10 @@ Pete has been built to be run with [OSMC](https://osmc.tv/) on a Raspberry Pi (b
 
 ## Installation
 
+This guide makes some assumptions:
+1. If you're intending to use a Pi with something OSMC, you're already installed OSMC and have it going. Installing OSMC is super easy and there are a ton of guides to assist you doing this.
+2. You have SSH access (for something like OSMC) and/or you know how to use a console
+
 Installation and configuration can be a little tedious, but hopefully not too bad, since that's why I made this in the first place.
 
 ### themoviedb.org
@@ -22,7 +26,7 @@ Next we need to get an API key to access your watchlists and other information a
 4. This will open a form to fill out for obtain a key.
   - Application Name: anything you want, but probably something like "Pete"
   - Application URL: http://localhost
-  - Summary: whatever you want, but it a minimum character validation, so something like: "Pulls my watchlist information (tv and movies) and automatically downloads them."
+  - Summary: whatever you want, but it has a minimum character validation, so something like: "Pulls my watchlist information (tv and movies) and automatically downloads them."
   - Continue to fill out other personal information
 5. Submit the form.
 
@@ -41,33 +45,33 @@ If you're using OSMC, then install [Transmission](https://transmissionbt.com/) t
 
 ### Node
 
-Now you need to install Node. If you're using OSMC on a Pi, installing Node depends on which Pi version you're using because of the different architecture.
+Now you need to install Node. If you're using OSMC on a Pi, installing Node depends on which Pi version you're using because of the different architecture. There are a couple ways to get Node installed. I followed the steps written by [Conall Laverty](https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi), which have been summarized below.
 
-I followed the steps written by [Conall Laverty](https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi), which have been summarized below:
+At the time of writing this, Node 6.8 is the latest. Version come out rather quickly so it won't take much time for this to become outdated. Pete will likely work with Node 4+ (untested, but an assumption), but was developed using version 6.4, so it's wise to use something in the 6's.
 
-Download Node.js source Raspberry Pi Model A, B, B+ and Compute Module:
-
+Raspberry Pi Model A, B, B+ and Compute Module:
 ```bash
-wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv6l.tar.gz
-tar -xvf node-v4.0.0-linux-armv6l.tar.gz
-cd node-v4.0.0-linux-armv6l
+wget https://nodejs.org/dist/latest-v6.x/node-v6.8.1-linux-armv6l.tar.gz
+tar -xvf node-v6.8.1-linux-armv6l.tar.gz
+cd node-v6.8.1-linux-armv6l
 ```
 
-Raspberry Pi 2 Model B
-
+Raspberry Pi 2 and 3 Model B
 ```bash
-wget https://nodejs.org/dist/v4.0.0/node-v4.0.0-linux-armv7l.tar.gz
-tar -xvf node-v4.0.0-linux-armv7l.tar.gz
-cd node-v4.0.0-linux-armv7l
+wget https://nodejs.org/dist/latest-v6.x/node-v6.8.1-linux-armv7l.tar.gz
+tar -xvf node-v6.8.1-linux-armv7l.tar.gz
+cd node-v6.8.1-linux-armv7l
 ```
 
 Copy to /usr/local
-
 ```bash
 sudo cp -R * /usr/local/
 ```
 
 To check Node.js is properly install and you have the right version, run the command `node -v`
 
+### Pete
 
-After getting Node installed
+After finishing all these steps, install it with npm: `npm i -g pete`. This opens up using the `pete` command to manually run commands.
+
+You can also clone the [repository](https://github.com/grantholle/pete) and run it locally (i.e. not using the `pete` command, just plain `node xxxx.js`). This requires that you have git installed, which I won't cover here, as there are also a ton of those guides already in existence.
