@@ -249,9 +249,18 @@ const fs = require('fs'),
                           jsonfile.spaces = 2
                           jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
                             winston.info('EZTV showlist cached')
-                            winston.info(installationMessage)
                             showsDb.db.close()
-                            setupTvShows()
+
+                            if (process.platform.toLowerCase() === 'linux') {
+                              prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
+                                if (add) {
+                                  require('./lib/add-service-file')()
+                                }
+                              })
+                            } else {
+                              winston.info(installationMessage)
+                              setupTvShows()
+                            }
                           })
                         })
                       })

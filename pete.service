@@ -1,0 +1,15 @@
+[Unit]
+Description=Your app
+After=network.target
+
+[Service]
+ExecStart=$start
+Restart=always
+User=nobody
+Group=nobody
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=$dir
+
+[Install]
+WantedBy=multi-user.target
