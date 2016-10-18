@@ -6,6 +6,8 @@ const commands = ['tv', 'movies', 'tv-setup']
 
 if (args[0] && commands.indexOf(args[0]) !== -1) {
   require(`./lib/${args[0]}`)()
+} else if (args[0].toLowerCase() === 'install') {
+  require('./install')
 } else if (args[0].toLowerCase() === 'help') {
   console.log(`Available commands are: ${'tv'.green}, ${'movies'.green}, ${'tv-setup'.green}`)
 } else {
