@@ -13,11 +13,12 @@ Pete has been built to run on [OSMC](https://osmc.tv/) on a Raspberry Pi (becaus
 ## Preparation
 
 This guide makes some assumptions:
+
 1. If you're intending to use a Pi with something OSMC, you're already installed OSMC and have it going. Installing OSMC is super easy and there are a ton of guides to assist you doing this.
 2. You have SSH access (for something like OSMC) and/or you know how to use a console
 3. If you're using a Pi, then you have an external drive ready and already mounted
-4. If you're using something Kodi related (OSMC, XMBC), then sqlite will already have been installed. If you're not using something Kodi related, you'll need to make sure that sqlite is installed.
-. You know who Pete Hornberger is
+4. If you're using something Kodi related (OSMC, XMBC), then sqlite will already be installed. If you're not using something Kodi related, you'll need to make sure that sqlite is installed.
+5. You know who Pete Hornberger is
 
 Installation and configuration can be a little tedious, but hopefully not too bad, since that's why I made this in the first place.
 
@@ -109,8 +110,8 @@ All the configuration settings are stored in a json file in `~/.config/pete/conf
   },
   "pushbullet": {
     "token": "", // Pushbullet token
-    "notifyOnFinish": true, // Receive a notification when a download finishes
-    "notifyOnStart": true // Receive a notification when an item begins to download
+    "notifyOnFinish": true, // (boolean) Receive a notification when a download finishes
+    "notifyOnStart": true // (boolean) Receive a notification when an item begins to download
   },
   "transmission": {
     "user": "osmc", // The Transmission RPC username
@@ -124,8 +125,8 @@ All the configuration settings are stored in a json file in `~/.config/pete/conf
   },
   "movies": {
     "quality": "1080p", // Either 1080p or 720p
-    "useYify": true, // Whether to use YIFY movies (quality is sometimes a little... "IFY" *pdum dum tsh*)
-    "fallback": true // If the desired quality cannot be found, look for the alternative quality
+    "useYify": true, // (boolean) Whether to use YIFY movies (quality is sometimes a little... "IFY" *pdum dum tsh*)
+    "fallback": true // (boolean) If the desired quality cannot be found, look for the alternative quality
   }
 }
 ```
@@ -136,10 +137,10 @@ Each show's configuration is stored in a sqlite database at `~/.config/pete/show
 
 The following commands can be run using the global module `pete` if you installed it with `npm i -g pete` or if you cloned the directory, run them inside the pete's root directory.
 
-- `pete install`  | `node install`       | Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings.
-- `pete tv-setup` | `node lib/tv-setup`  | Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.
-- `pete tv`       | `node lib/tv`        | Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
-- `pete movies`   | `node lib/movies`    | Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist.
+- `pete install` | `node install` - Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings.
+- `pete tv-setup` | `node lib/tv-setup` - Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.
+- `pete tv` - `node lib/tv` - Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
+- `pete movies` - `node lib/movies` - Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist.
 
 If you've installed Pete on a Linux platform (such as OSMC), it will have prompted you to add a service file. This adds the ability to start Pete as a daemon on startup. It will check your TV show watchlist every hour and your movie watchlist every minute.
 
