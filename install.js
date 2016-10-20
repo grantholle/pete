@@ -237,10 +237,10 @@ const fs = require('fs'),
 
                     // Finally write the configs
                     createConfigDir(() => {
-                      const showsDb = require('./lib/shows-db')
+                      const mediaDb = require('./lib/media-db')
 
                       // Create the databases if they don't exist
-                      showsDb.createDbs()
+                      mediaDb.createDbs()
 
                       // Get the EZTV showlist to cache
                       createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
@@ -249,7 +249,7 @@ const fs = require('fs'),
                           jsonfile.spaces = 2
                           jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
                             winston.info('EZTV showlist cached')
-                            showsDb.db.close()
+                            mediaDb.db.close()
 
                             if (process.platform.toLowerCase() === 'linux') {
                               prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
@@ -318,7 +318,7 @@ fs.stat(configPath, (err, stat) => {
         if (err)
           return winston.info(abortMessage)
 
-        const shows = require('./lib/shows-db')
+        const shows = require('./lib/media-db')
 
         if (result) {
           shows.db.run('drop table if exists downloads')
