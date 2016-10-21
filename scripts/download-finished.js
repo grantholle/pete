@@ -9,8 +9,13 @@ const torrentId = process.env.TR_TORRENT_ID,
       notify = require('../lib/pushbullet').downloadFinished,
       label = require('../lib/show-label')
 
-mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId], (err, show) => {
-  const msg = `${show.show} ${label(show.season, show.episode)}, ${show.name}, has finished downloading.`
+mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId], (err, item) => {
+  const msg
+
+  if (item.season)
+    msg = `${item.show} ${label(item.season, item.episode)}, ${item.name}, has finished downloading.`
+  else
+    msg = `${item.name} has finished downloading.`
 
   winston.info(msg)
   notify(msg)
