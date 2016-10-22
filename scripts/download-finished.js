@@ -10,7 +10,7 @@ const torrentId = process.env.TR_TORRENT_ID,
       label = require('../lib/show-label')
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId], (err, item) => {
-  const msg
+  let msg
 
   if (item.season)
     msg = `${item.show} ${label(item.season, item.episode)}, ${item.name}, has finished downloading.`
@@ -19,4 +19,6 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId],
 
   winston.info(msg)
   notify(msg)
+
+  // rename here
 })
