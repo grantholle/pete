@@ -23,7 +23,7 @@
     "parse-torrent": "^5.8.1",
     "prompt": "^1.0.0",
     "pushbullet": "^1.4.3",
-    "rarbg": "^0.4.0",
+    "rarbg": "^0.4.1",
     "sanitize-filename": "^1.6.0",
     "sqlite3": "^3.1.6",
     "transmission": "^0.4.5",
