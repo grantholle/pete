@@ -249,19 +249,36 @@ const fs = require('fs'),
                             winston.info('EZTV showlist cached')
                             mediaDb.db.close()
 
+                            // Create the service file for linux daemon
+                            // if (process.platform.toLowerCase() === 'linux') {
+                            //   prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
+                            //     if (add) {
+                            //       require('./lib/add-service-file')(() => {
+                            //         winston.info(installationMessage)
+                            //         setupTvShows()
+                            //       })
+                            //     }
+                            //   })
+                            // } else {
+                            //   winston.info(installationMessage)
+                            //   setupTvShows()
+                            // }
+
                             if (process.platform.toLowerCase() === 'linux') {
                               prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
                                 if (add) {
-                                  require('./lib/add-service-file')(() => {
-                                    winston.info(installationMessage)
-                                    setupTvShows()
+                                  require('./lib/add-service-file')((err, msg) => {
+                                    if (err)
+                                      return winston.error(err)
+
+                                    winston.info(msg)
                                   })
                                 }
                               })
-                            } else {
-                              winston.info(installationMessage)
-                              setupTvShows()
                             }
+
+                            winston.info(installationMessage)
+                            setupTvShows()
                           })
                         })
                       })
