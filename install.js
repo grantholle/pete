@@ -1,11 +1,7 @@
 'use strict'
 
 let overwriteConfig = true,
-    overwriteShows = true,
-    res = {
-      config: false,
-      library: false
-    }
+    overwriteShows = true
 
 const fs = require('fs'),
       os = require('os'),
@@ -24,8 +20,6 @@ const fs = require('fs'),
       winston = require('./lib/logger'),
       installationMessage = '\nInstallation complete! '.blue,
       abortMessage = '\nInstallation aborted!'.red,
-      createShows = 'create table if not exists shows (tmdb_id integer primary key, name varchar(255), start_season integer, start_episode integer, desired_quality varchar(10), eztv text)',
-      createDownloads = 'create table if not exists downloads (id integer primary key, tmdb_id integer, name varchar(255), episode integer, season integer, transmission_id integer, download_dir varchar(255), foreign key (tmdb_id) references shows(tmdb_id))',
 
       promptSchema = [
         {
@@ -120,11 +114,11 @@ const fs = require('fs'),
                 throw err
 
               winston.info(`Created directory ${configDir}`)
-              cb()
+              process.nextTick(cb)
             })
           } else {
             winston.info(`Config directory already exists`)
-            cb()
+            process.nextTick(cb)
           }
         })
       },
@@ -135,7 +129,9 @@ const fs = require('fs'),
             throw err
 
           winston.info(`Created ${filePath}`)
-          cb()
+
+          if (cb)
+            process.nextTick(cb)
         })
       },
 
@@ -239,14 +235,16 @@ const fs = require('fs'),
                     createConfigDir(() => {
                       const mediaDb = require('./lib/media-db')
 
-                      // Create the databases if they don't exist
+                      // Write the config file
+                      createFile(configPath, config)
+
+                      // Create the databases
                       mediaDb.createDbs()
 
                       // Get the EZTV showlist to cache
                       createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
                         winston.info('Retrieving EZTV showlist...')
                         eztv.getAllShows().then(results => {
-                          jsonfile.spaces = 2
                           jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
                             winston.info('EZTV showlist cached')
                             mediaDb.db.close()
@@ -318,10 +316,10 @@ fs.stat(configPath, (err, stat) => {
         if (err)
           return winston.info(abortMessage)
 
-        const shows = require('./lib/media-db')
+        const mediaDb = require('./lib/media-db')
 
         if (result) {
-          shows.db.run('drop table if exists downloads')
+          mediaDb.deleteDownloads()
         }
 
         prompt.confirm(schema[2], (err, result) => {
@@ -331,9 +329,10 @@ fs.stat(configPath, (err, stat) => {
           overwriteShows = result
 
           if (result) {
-            shows.db.run('drop table if exists shows')
+            mediaDb.deleteShows()
           }
 
+          mediaDb.close()
           install()
         })
       })
