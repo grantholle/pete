@@ -18,91 +18,8 @@ const fs = require('fs'),
       EZTV = require("eztv-api-pt"),
       eztv = new EZTV(),
       winston = require('./lib/logger'),
-      installationMessage = '\nInstallation complete! '.blue,
+      installationMessage = '\nInstallation complete!'.blue,
       abortMessage = '\nInstallation aborted!'.red,
-
-      promptSchema = [
-        {
-          name: 'moviesDir',
-          required: true,
-          description: 'Movies directory'
-        },
-        {
-          name: 'tvDir',
-          required: true,
-          description: 'TV directory'
-        },
-        {
-          name: 'movieQuality',
-          required: true,
-          default: '1080p',
-          description: 'Desired movie quality. If any, will search starting with the highest quality. [BDRip/1080p/720p/any]',
-          pattern: /^720p$|^1080p$|^BDRip|^any$/i,
-          message: "Must be either BDRip, 1080p, 720p, or any",
-        },
-        {
-          name: 'fallback',
-          required: true,
-          default: true,
-          type: 'boolean',
-          description: 'Use lower resolution as fallback? [t/f]',
-          pattern: /^720p$|^1080p$|^BDRip$/i
-        },
-        {
-          name: 'useYify',
-          required: true,
-          default: true,
-          type: 'boolean',
-          description: 'Use YIFY movie torrents? [t/f]'
-        },
-        {
-          name: 'user',
-          required: true,
-          description: 'Transmission username',
-          default: 'osmc'
-        },
-        {
-          name: 'pw',
-          required: true,
-          description: 'Transmission password',
-          default: 'osmc'
-        },
-        {
-          name: 'host',
-          required: true,
-          description: 'Transmission host location',
-          default: 'localhost'
-        },
-        {
-          name: 'port',
-          required: true,
-          description: 'Transmission port',
-          type: 'integer',
-          default: 9091
-        },
-        {
-          name: 'apiKey',
-          required: true,
-          description: 'Please enter your TMdb api key'
-        },
-        {
-          name: 'pbToken',
-          required: false,
-          description: 'Pushbullet api token'
-        },
-        {
-          name: 'notifyOnStart',
-          default: 'true',
-          description: 'Get a notification when a download is started?',
-          type: 'boolean'
-        },
-        {
-          name: 'notifyOnFinish',
-          default: 'true',
-          description: 'Get a notification when a download is finished?',
-          type: 'boolean'
-        }
-      ],
 
       createConfigDir = (cb) => {
         fs.stat(configDir, (err, stat) => {
@@ -111,14 +28,14 @@ const fs = require('fs'),
           if (err) {
             mkdirp(configDir, err => {
               if (err)
-                throw err
+                return process.nextTick(err)
 
               winston.info(`Created directory ${configDir}`)
-              process.nextTick(cb)
+              process.nextTick(cb, null)
             })
           } else {
             winston.info(`Config directory already exists`)
-            process.nextTick(cb)
+            process.nextTick(cb, null)
           }
         })
       },
@@ -126,12 +43,10 @@ const fs = require('fs'),
       createFile = (filePath, obj, cb) => {
         jsonfile.writeFile(filePath, obj, err => {
           if (err)
-            throw err
+            return process.nextTick(cb, err)
 
           winston.info(`Created ${filePath}`)
-
-          if (cb)
-            process.nextTick(cb)
+          process.nextTick(cb, null)
         })
       },
 
@@ -179,15 +94,101 @@ const fs = require('fs'),
 
       install = () => {
         if (overwriteConfig) {
+          let promptSchema = [
+            {
+              name: 'moviesDir',
+              required: true,
+              description: 'Movie destination directory'
+            },
+            {
+              name: 'tvDir',
+              required: true,
+              description: 'TV destination directory'
+            },
+            {
+              name: 'movieQuality',
+              required: true,
+              default: '1080p',
+              description: 'Desired movie quality. If any, will search starting with the highest quality. [1080p/720p]',
+              pattern: /^720p$|^1080p$/i,
+              message: "1080p or 720p",
+            },
+            {
+              name: 'fallback',
+              required: true,
+              default: true,
+              type: 'boolean',
+              description: 'Use lower resolution as fallback? [t/f]',
+              pattern: /^720p$|^1080p$|^BDRip$/i
+            },
+            {
+              name: 'useYify',
+              required: true,
+              default: true,
+              type: 'boolean',
+              description: 'Use YIFY movie torrents? [t/f]'
+            },
+            {
+              name: 'user',
+              required: true,
+              description: 'Transmission username',
+              default: 'osmc'
+            },
+            {
+              name: 'pw',
+              required: true,
+              description: 'Transmission password',
+              default: 'osmc'
+            },
+            {
+              name: 'host',
+              required: true,
+              description: 'Transmission host location',
+              default: 'localhost'
+            },
+            {
+              name: 'port',
+              required: true,
+              description: 'Transmission port',
+              type: 'integer',
+              default: 9091
+            },
+            {
+              name: 'apiKey',
+              required: true,
+              description: 'Please enter your TMdb api key'
+            },
+            {
+              name: 'pbToken',
+              required: false,
+              description: 'Pushbullet api token'
+            },
+            {
+              name: 'notifyOnStart',
+              default: 'true',
+              description: 'Get a notification when a download is started?',
+              type: 'boolean'
+            },
+            {
+              name: 'notifyOnFinish',
+              default: 'true',
+              description: 'Get a notification when a download is finished?',
+              type: 'boolean'
+            }
+          ]
+
           prompt.get(promptSchema, (err, result) => {
+            if (err)
+              return winston.info(abortMessage)
+
             let config = {
               tmdb: {
                 apiKey: result.apiKey
               },
               pushbullet: {
                 token: result.pbToken,
-                notifyOnStart: notifyOnStart,
-                notifyOnFinish: notifyOnFinish
+                notifyOnStart: result.notifyOnStart,
+                notifyOnFinish: result.notifyOnFinish
               },
               transmission: {
                 user: result.user,
@@ -220,7 +221,7 @@ const fs = require('fs'),
               prompt.start()
 
               // Wait for the user to have authenticated, then get the session ID
-              prompt.confirm('Continue [yes/no]', (err, input) => {
+              prompt.confirm('Authenticated [y/n]', (err, input) => {
 
                 if (input) {
                   // Get the session id
@@ -231,57 +232,60 @@ const fs = require('fs'),
                     // Set the session ID
                     config.tmdb.sessionId = res.session_id
 
-                    // Finally write the configs
+                    // Finally write the configs, starting with the config directory
                     createConfigDir(() => {
-                      const mediaDb = require('./lib/media-db')
+                      const mediaDb = require('./lib/media-db'),
+                            eztvCachePath = p.join(configDir, 'eztv-shows.json'),
+                            startTvSetup = () => {
 
-                      // Write the config file
-                      createFile(configPath, config)
-
-                      // Create the databases
-                      mediaDb.createDbs()
-
-                      // Get the EZTV showlist to cache
-                      createFile(p.join(configDir, 'eztv-shows.json'), [], () => {
-                        winston.info('Retrieving EZTV showlist...')
-                        eztv.getAllShows().then(results => {
-                          jsonfile.writeFile(p.join(configDir, 'eztv-shows.json'), results, () => {
-                            winston.info('EZTV showlist cached')
-                            mediaDb.db.close()
-
-                            // Create the service file for linux daemon
-                            // if (process.platform.toLowerCase() === 'linux') {
-                            //   prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
-                            //     if (add) {
-                            //       require('./lib/add-service-file')(() => {
-                            //         winston.info(installationMessage)
-                            //         setupTvShows()
-                            //       })
-                            //     }
-                            //   })
-                            // } else {
-                            //   winston.info(installationMessage)
-                            //   setupTvShows()
-                            // }
-
-                            if (process.platform.toLowerCase() === 'linux') {
-                              prompt.confirm('Add daemon service script? [yes/no]', (err, add) => {
-                                if (add) {
-                                  require('./lib/add-service-file')((err, msg) => {
-                                    if (err)
-                                      return winston.error(err)
-
-                                    winston.info(msg)
-                                  })
-                                }
-                              })
                             }
 
-                            winston.info(installationMessage)
-                            setupTvShows()
+                      // Write the config file
+                      jsonfile.spaces = 2
+                      createFile(configPath, config, err => {
+                        if (err)
+                          return winston.error(err)
+
+                        setupTvShows()
+                      })
+
+                      // Create the databases
+                      mediaDb.createDbs(err => {
+                        if (err)
+                          return winston.error(err)
+
+                        winston.info('Successfully created media database')
+                      })
+
+                      // Get the EZTV showlist to cache
+                      createFile(eztvCachePath, [], err => {
+                        if (err)
+                          return winston.error(err)
+
+                        // Create the file first because eztv can be fussy
+                        winston.info('Retrieving EZTV showlist...')
+
+                        // Retrieve showlist
+                        eztv.getAllShows().then(results => {
+                          // Write the results
+                          jsonfile.writeFile(eztvCachePath, results, () => {
+                            winston.info('EZTV showlist cached')
                           })
                         })
                       })
+
+                      if (process.platform.toLowerCase() === 'linux') {
+                        prompt.confirm('Add daemon service script? [y/n]', (err, add) => {
+                          if (add) {
+                            require('./lib/add-service-file')((err, msg) => {
+                              if (err)
+                              return winston.error(err)
+
+                              winston.info(msg)
+                            })
+                          }
+                        })
+                      }
                     })
                   })
                 } else {
@@ -291,8 +295,16 @@ const fs = require('fs'),
             })
           })
         } else if (overwriteShows) {
-          // TV prompting
-          setupTvShows()
+          const mediaDb = require('./lib/media-db')
+
+          mediaDb.createDbs(err => {
+            if (err)
+              return winston.error(err)
+
+            winston.info('Successfully created media database')
+            // TV prompting
+            setupTvShows()
+          })
         } else {
           winston.info(installationMessage)
         }
@@ -304,55 +316,41 @@ prompt.start()
 // Check if the config already exists
 // Prompt user to overwrite or not
 fs.stat(configPath, (err, stat) => {
-  if (err) {
-    install()
-  } else {
-    const schema = [
-      {
-        name: 'config',
-        description: 'Overwrite current configuration? [y/n]'
-      },
-      {
-        name: 'downloads',
-        description: 'Remove show download history? [y/n]'
-      },
-      {
-        name: 'shows',
-        description: 'Overwrite entire shows configuration? [y/n]'
-      }
-    ]
+  if (err)
+    return install()
 
-    winston.info('Config files detected!'.yellow)
-    prompt.confirm(schema[0], (err, result) => {
+  winston.info('Config files detected!'.yellow)
+
+  // Prompt for config overwrite
+  prompt.confirm({ name: 'config', description: 'Overwrite current configuration? [y/n]' }, (err, result) => {
+    if (err)
+      return winston.info(abortMessage)
+
+    overwriteConfig = result
+
+    // Prompt for removing downloads table
+    prompt.confirm({ name: 'downloads', description: 'Remove show download history? [y/n]' }, (err, result) => {
       if (err)
         return winston.info(abortMessage)
 
-      overwriteConfig = result
+      const mediaDb = require('./lib/media-db')
 
-      prompt.confirm(schema[1], (err, result) => {
+      if (result)
+        mediaDb.deleteDownloads()
+
+      // Prompt for deleting shows
+      prompt.confirm({ name: 'shows', description: 'Overwrite entire shows configuration? [y/n]' }, (err, result) => {
         if (err)
-          return winston.info(abortMessage)
+        return winston.info(abortMessage)
 
-        const mediaDb = require('./lib/media-db')
+        overwriteShows = result
 
-        if (result) {
-          mediaDb.deleteDownloads()
-        }
+        if (result)
+          mediaDb.deleteShows()
 
-        prompt.confirm(schema[2], (err, result) => {
-          if (err)
-            return winston.info(abortMessage)
-
-          overwriteShows = result
-
-          if (result) {
-            mediaDb.deleteShows()
-          }
-
-          mediaDb.close()
-          install()
-        })
+        // Finally install
+        install()
       })
     })
-  }
+  })
 })
