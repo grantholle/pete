@@ -18,7 +18,8 @@ This guide makes some assumptions:
 2. You have SSH access (for something like OSMC) and/or you know how to use a console
 3. If you're using a Pi, then you have an external drive ready and already mounted
 4. If you're using something Kodi related (OSMC, XMBC), then sqlite will already be installed. If you're not using something Kodi related, you'll need to make sure that sqlite is installed.
-5. You know who Pete Hornberger is
+5. If you plan on cloning the repo manually you have git installed
+6. You know who Pete Hornberger is
 
 Installation and configuration can be a little tedious, but hopefully not too bad, since that's why I made this in the first place.
 
@@ -92,6 +93,7 @@ You can put it anywhere, but I'd suggest putting it in your home directory.
 cd ~
 git clone https://github.com/grantholle/pete.git
 cd pete
+git checkout master
 npm i
 ```
 
@@ -101,7 +103,7 @@ The questions and steps should be self explanatory, so I won't cover each questi
 
 Once configuration is finished, it will prompt you to set up your TV show watchlist. This step isn't necessary, but if you plan on getting episodes of seasons other than the most recent, then you might want to take the time to set up your watchlist TV shows.
 
-All the configuration settings are stored in a json file in `~/.config/pete/config.json`. Feel free to either run `pete install` or `node install` in Pete's root directory. The settings are laid out as follows:
+All the configuration settings are stored in a json file, `~/.config/pete/config.json`. Feel free to either run `pete install` or `node install` in Pete's root directory. The settings are laid out as follows:
 
 ```
 {
@@ -130,6 +132,8 @@ All the configuration settings are stored in a json file in `~/.config/pete/conf
   }
 }
 ```
+
+You can change these settings manually without going through the prompted installation process.
 
 Each show's configuration is stored in a sqlite database at `~/.config/pete/shows.db`. Feel free to explore and/or modify the show settings manually, or use the TV setup script detailed below.
 
