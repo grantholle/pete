@@ -93,7 +93,7 @@ After finishing all the preparation steps, install Pete with npm: `npm i -g pete
 
 After npm finishes installation, Pete automatically launches its Configuration script where you provide various settings.
 
-You can also clone the [repository](https://github.com/grantholle/pete) and run it locally (i.e. not using the `pete` command, just plain `node xxxx.js` or sometimes just running the script `./xxxx.js`). This requires that you have git installed, which I won't cover here, as there are also a ton of those guides already in existence.
+You can also clone the [repository](https://github.com/grantholle/pete) and run it locally (i.e. not using the `pete` command, use `./index xxxx.js` or sometimes just running the script `./xxxx.js`). This requires that you have git installed, which I won't cover here, as there are also a ton of those guides already in existence.
 
 You can put it anywhere, but I'd suggest putting it in your home directory.
 
@@ -105,11 +105,11 @@ git checkout master
 npm i
 ```
 
-As mentioned above, if you installed it globally through npm the configuration script begins automatically after installation. If you followed the steps of cloning Pete, simply run `node install` (assuming you're already in the `pete` directory).
+As mentioned above, if you installed it globally through npm the configuration script begins automatically after installation. If you followed the steps of cloning Pete, simply run `./index.js install` (assuming you're already in the `pete` directory).
 
 The questions and steps should be self explanatory, so I won't cover each question. As mentioned in the preparation steps above having your TMdb API key and (optionally) your Pushbullet access token ready is helpful.
 
-Once configuration is finished, it will prompt you to set up your TV show watchlist. This step isn't necessary, but if you plan on getting episodes of seasons other than the most recent, then you might want to take the time to set up your watchlist TV shows.
+Once configuration is finished, you can setup your TV shows. Run `pete tv-setup` or `./index.js tv-setup` to begin the process. It will pull your TV watchlist and ask you about what season and episode to start downloading from, as well as the desired quality.
 
 All the configuration settings are stored in a json file, `~/.config/pete/config.json`. Feel free to either run `pete install` or `node install` in Pete's root directory. The settings are laid out as follows:
 
@@ -151,11 +151,11 @@ If you're using a Linux distro and would like to have a service file that automa
 
 The following commands can be run using the global module `pete` if you installed it with `npm i -g pete` or if you cloned the directory, run them inside the pete's root directory.
 
-- `pete install` | `node install` - Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings.
-- `pete tv-setup` | `node lib/tv-setup` - Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.
-- `pete tv` | `node lib/tv` - Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
-- `pete movies` | `node lib/movies` - Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist.
-- `sudo pete add-service-file` | `sudo node lib/add-service-file` - Creates a service file to be run on startup to run Pete as a daemon. Requires sudo permissions to write the file.
+- `pete install` | `./index.js install` - Goes through the installation process. If installation has already taken place, it will ask if you'd like to overwrite your settings.
+- `pete tv-setup` | `./index.js lib/tv-setup` - Goes through each show in your TMdb TV watchlist and sets up the season and episode you wish to start downloading and the desired quality (720p or HDTV). You can run this at any time to overwrite or skip shows you don't need to overwrite.
+- `pete tv` | `./index.js lib/tv` - Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
+- `pete movies` | `./index.js lib/movies` - Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After adding it, it's removed from your watchlist.
+- `sudo pete add-service-file` | `sudo ./index.js lib/add-service-file` - Creates a service file to be run on startup to run Pete as a daemon. Requires sudo permissions to write the file.
 
 If you've installed Pete on a Linux platform (such as OSMC), it will have prompted you to add a service file. This adds the ability to start Pete as a daemon on startup. It will check your TV show watchlist every hour and your movie watchlist every minute.
 
