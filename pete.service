@@ -1,5 +1,5 @@
 [Unit]
-Description=Your app
+Description=Check your TMdb TV and Movie watchlists
 After=network.target
 
 [Service]
@@ -7,7 +7,7 @@ ExecStart=$start
 Restart=always
 User=nobody
 Group=nobody
-Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PATH=/usr/bin:/usr/local/bin:/usr/local
 Environment=NODE_ENV=production
 WorkingDirectory=$dir
 
