@@ -5,11 +5,13 @@ After=network.target
 [Service]
 ExecStart=$start
 Restart=always
-User=nobody
-Group=nobody
+# User=root
+# Group=root
+# StandardOutput=syslog
+# StandardError=syslog
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/local
 Environment=NODE_ENV=production
-WorkingDirectory=$dir
+# WorkingDirectory=$dir
 
 [Install]
 WantedBy=multi-user.target
