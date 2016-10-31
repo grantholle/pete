@@ -88,10 +88,6 @@ const fs = require('fs'),
         })
       },
 
-      setupTvShows = () => {
-        require('./lib/tv-setup')()
-      },
-
       install = () => {
         if (overwriteConfig) {
           let promptSchema = [
@@ -235,18 +231,13 @@ const fs = require('fs'),
                     // Finally write the configs, starting with the config directory
                     createConfigDir(() => {
                       const mediaDb = require('./lib/media-db'),
-                            eztvCachePath = p.join(configDir, 'eztv-shows.json'),
-                            startTvSetup = () => {
-
-                            }
+                            eztvCachePath = p.join(configDir, 'eztv-shows.json')
 
                       // Write the config file
                       jsonfile.spaces = 2
                       createFile(configPath, config, err => {
                         if (err)
                           return winston.error(err)
-
-                        setupTvShows()
                       })
 
                       // Create the databases
@@ -289,8 +280,6 @@ const fs = require('fs'),
               return winston.error(err)
 
             winston.info('Successfully created media database')
-            // TV prompting
-            setupTvShows()
           })
         } else {
           winston.info(installationMessage)
