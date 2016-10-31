@@ -273,19 +273,6 @@ const fs = require('fs'),
                           })
                         })
                       })
-
-                      if (process.platform.toLowerCase() === 'linux') {
-                        prompt.confirm('Add daemon service script? [y/n]', (err, add) => {
-                          if (add) {
-                            require('./lib/add-service-file')((err, msg) => {
-                              if (err)
-                              return winston.error(err)
-
-                              winston.info(msg)
-                            })
-                          }
-                        })
-                      }
                     })
                   })
                 } else {
