@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "Automatically download your TMdb watchlists",
   "main": "index.js",
-  "scripts": {
-    "install": "node install"
-  },
   "bin": {
     "pete": "index.js"
   },
