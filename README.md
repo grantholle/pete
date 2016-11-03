@@ -145,7 +145,7 @@ If you're using a Linux distro and would like to have a service file that automa
 
 ### Transmission
 
-
+You'll need to configure Transmission somewhere in the mix. Pete has a "torrent finished" script that will send a Pushbullet notification concerning the finished item. In Transmission's `settings.json`, set `script-torrent-done-filename` to `/path/to/pete/scripts/download-finished.js` and `script-torrent-done-enabled` to `true`.
 
 ## Usage
 
