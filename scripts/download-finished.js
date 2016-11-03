@@ -12,7 +12,9 @@ const torrentId = process.env.TR_TORRENT_ID,
 mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId], (err, item) => {
   let msg
 
-  if (item.season)
+  if (!item)
+    msg = `${process.env.TR_TORRENT_NAME} has finished downloading.`
+  else if (item.season)
     msg = `${item.show} ${label(item.season, item.episode)}, ${item.name}, has finished downloading.`
   else
     msg = `${item.name} has finished downloading.`
