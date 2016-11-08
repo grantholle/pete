@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const tv = require('../lib/tv'),
-      movies = require('../lib/movies'),
-      minutely = 60 * 1000,
-      tenMinutes = 10 * minutely,
+const minutely = 60 * 1000,
+      thirteenMinutes = 13 * minutely,
       hourly = 60 * minutely
 
-let tvInterval = setInterval(tv, hourly)
-let moviesInterval = setInterval(movies, tenMinutes)
+let tvInterval = setInterval(() => {
+  require('../lib/tv')()
+}, hourly)
+
+let moviesInterval = setInterval(() => {
+  require('../lib/movies')()
+}, thirteenMinutes)
