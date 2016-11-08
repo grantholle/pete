@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const torrentId = process.env.TR_TORRENT_ID,
-      winston = require('../lib/logger'),
+const winston = require('../lib/logger'),
       fs = require('fs'),
       mediaDb = require('../lib/media-db'),
       sanitize = require('sanitize-filename'),
       notify = require('../lib/pushbullet').downloadFinished,
       label = require('../lib/show-label')
 
-mediaDb.db.get('select * from downloads where transmission_id = ?', [torrentId], (err, item) => {
+mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   let msg
 
   if (!item) {
