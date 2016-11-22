@@ -8,7 +8,7 @@ const winston = require('../lib/logger'),
       notify = require('../lib/pushbullet').downloadFinished,
       label = require('../lib/show-label')
 
-mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
+mediaDb.db.get('select * from downloads where transmission_name = ?', [process.env.TR_TORRENT_NAME], (err, item) => {
   let msg
 
   if (!item) {
