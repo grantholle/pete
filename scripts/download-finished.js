@@ -2,15 +2,15 @@
 'use strict'
 
 const winston = require('../lib/logger'),
-      fs = require('fs'),
       mediaDb = require('../lib/media-db'),
-      sanitize = require('sanitize-filename'),
+      kodi = require('kodi-ws'),
       notify = require('../lib/pushbullet').downloadFinished,
       label = require('../lib/show-label')
 
-mediaDb.db.get('select * from downloads where transmission_name = ?', [process.env.TR_TORRENT_NAME], (err, item) => {
+mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   let msg
 
+  // If the item doesn't exist in the db, else if the item is a tv show, else it's a movie
   if (!item) {
     msg = `${process.env.TR_TORRENT_NAME} has finished downloading.`
   } else if (item.season) {
@@ -19,8 +19,12 @@ mediaDb.db.get('select * from downloads where transmission_name = ?', [process.e
     msg = `${item.name} has finished downloading.`
   }
 
+  // Send a notification
   winston.info(msg)
   notify(msg)
 
-  // rename here
+  // Refresh the library
+  kodi('localhost', 9090).then(function(connection) {
+    connection.VideoLibrary.Scan()
+  })
 })
