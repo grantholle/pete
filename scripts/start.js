@@ -2,7 +2,7 @@
 'use strict'
 
 const minutely = 60 * 1000,
-      twoMinutes = minutely * 2,
+      cleanDelay = minutely * 2,
       thirteenMinutes = 13 * minutely,
       hourly = 60 * minutely
 
@@ -16,4 +16,4 @@ let moviesInterval = setInterval(() => {
 
 let cleanInterval = setInterval(() => {
   require('../lib/clean-torrents')()
-}, twoMinutes)
+}, cleanDelay)
