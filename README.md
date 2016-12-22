@@ -18,7 +18,7 @@ That being said, the follow installation instructions are with the Raspberry Pi 
 
 This guide makes some assumptions:
 
-1. If you're intending to use a Pi with something OSMC, you're already installed OSMC and have it going. Installing OSMC is super easy and there are a ton of guides to assist you doing this.
+1. If you're intending to use a Pi with something like OSMC, you're already installed OSMC and have it going. Installing OSMC is super easy and there are a ton of guides to assist you doing this.
 2. You have SSH access (for something like OSMC) and/or you know how to use a console
 3. If you're using a Pi, then you have an external drive ready and already mounted
 4. If you plan on cloning the repo manually you have git installed
@@ -60,7 +60,7 @@ If you're using OSMC, then install [Transmission](https://transmissionbt.com/) t
 
 Now you need to install Node. If you're using OSMC on a Pi, installing Node depends on which Pi version you're using because of the different architecture. There are a couple ways to get Node installed. I followed the steps written by [Conall Laverty](https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi), which have been summarized below.
 
-At the time of writing this, Node 6.8 is the latest. Versions come out rather quickly so it won't take much time for this to become outdated. Pete will likely work with Node 4+ (untested, but an assumption), but was developed using version 6.4, so it's wise to use something in the 6's.
+At the time of writing this, Node 6.8 is the latest. Versions come out rather quickly so it won't take much time for this to become outdated. Pete will likely work with Node 4+ (untested, but an assumption), but was developed using version 6.4, so it's wise to use something in the 6+'s.
 
 ```
 wget https://nodejs.org/dist/v6.8.1/node-v6.8.1-linux-armv7l.tar.gz
@@ -69,15 +69,13 @@ cd node-v6.8.1-linux-armv7l
 sudo cp -R * /usr/local/
 ```
 
-To check Node.js is properly install and you have the right version, run the command `node -v`
+To check Node.js is properly installed and you have the right version, run the command `node -v`
 
 ## Installation and Configuration
 
 ### Pete
 
 After finishing all the preparation steps, install Pete with npm: `npm i -g pete`. This opens up using the `pete` command to manually run commands.
-
-After npm finishes installation, Pete automatically launches its Configuration script where you provide various settings.
 
 You can also clone the [repository](https://github.com/grantholle/pete) and link the local repo as a global module. This requires that you have git installed, which I won't cover here, as there are also a ton of those guides already in existence.
 
@@ -94,11 +92,11 @@ sudo npm link
 
 After the module has been installed via npm or git, run the setup/installation script with `pete install`.
 
-The questions and steps should be self explanatory, so I won't cover each question. As mentioned in the preparation steps above having your TMdb API key and (optionally) your Pushbullet access token ready is helpful.
+The questions and steps should be self explanatory, so each question won't be covered here. As mentioned in the preparation steps above having your TMdb API key and (optionally) your Pushbullet access token ready is helpful.
 
 Once configuration is finished, you can setup your TV shows. Run `pete tv-setup` to begin the process. It will pull your TV watchlist and ask you about what season and episode to start downloading from, as well as the desired quality.
 
-All the configuration settings are stored in a json file, `~/.config/pete/config.json`. Feel free to either run `pete install` at any time with options to overwrite settings or remove your content history. The settings are laid out as follows:
+All the configuration settings are stored in a json file, `~/.config/pete/config.json`. Feel free to either run `pete install` at any time with options to overwrite settings or remove your content history from the database (downloaded files are **not** deleted). The settings are laid out as follows:
 
 ```
 {
@@ -132,7 +130,9 @@ You can change these settings manually without going through the prompted instal
 
 Each show's configuration is stored in a sqlite database at `~/.config/pete/shows.db`. Feel free to explore and/or modify the show settings manually, or use the TV setup script detailed below.
 
-If you're using a Linux distro and would like to have a service file that automatically started on boot to run Pete in the background, then use the command `sudo pete add-service-file`. After installing the service file, reload the daemon with `sudo systemctl daemon-reload`, then start Pete's daemon with `sudo systemctl start pete`. It should automatically start on boot.
+If you're using a Linux distro and would like to have a service file that automatically started on boot to run Pete in the background, then use the command `sudo pete add-service-file`. After installing the service file, reload the daemon with `sudo systemctl daemon-reload`, then start Pete's daemon with `sudo systemctl start pete`. It should automatically start on boot. After generating the service file, you can edit the file at `/lib/systemd/system/pete.service` to modify the intervals when Pete checks the watchlists.
+
+If you're not using Linux or you wish to not use the daemon, there are lots of alternatives to run commands at certain intervals. Feel free to use what you're comfortable with to run the above `tv` and `movies` commands.
 
 ### Transmission
 
@@ -147,12 +147,6 @@ The following commands can be run using `pete [command]`:
 - `tv` - Goes through each show in your TMdb TV watchlist and downloads the next appropriate episode(s) according to `tv-setup`, or if there is no existing configuration, the default setting is to start at the most recent season's episode 1 with HDTV quality.
 - `movies` - Goes through each movie in your TMdb Movie watchlist and adds it to Transmission. After successfully finding it and starting the download in Transmission, it's removed from your watchlist.
 - `add-service-file` - Creates a service file to be run on startup to start Pete as a daemon. **Requires sudo permissions to write the file.**
-
-If you've installed Pete on a Linux platform (such as OSMC), it will have prompted you to add a service file. This adds the ability to start Pete as a daemon on startup. It will check your TV show watchlist every hour and your movie watchlist every 13 minutes. The service file is opinionated with preferences to OSMC's file paths. After generating the service file, you can edit the file at `/lib/systemd/system/pete.service` to modify the intervals when Pete checks the watchlists.
-
-After installing the service file, reload the daemon with `sudo systemctl daemon-reload`, then start Pete's daemon with `sudo systemctl start pete`. It should automatically start on boot.
-
-If you're not using Linux or you wish to not use the daemon, there are lots of alternatives to run commands at certain intervals. Feel free to use what you're comfortable with to run the above `tv` and `movies` commands.
 
 ## Thanks
 
