@@ -240,6 +240,9 @@ const fs = require('fs'),
                           return winston.error(err)
                       })
 
+                      // create the torrent file folder
+                      mkdirp(p.join(configDir, 'torrent-files'), () => { })
+
                       // Create the databases
                       mediaDb.createDbs(err => {
                         if (err)
