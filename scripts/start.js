@@ -13,7 +13,3 @@ let tvInterval = setInterval(() => {
 let moviesInterval = setInterval(() => {
   require('../lib/movies')()
 }, thirteenMinutes)
-
-let cleanInterval = setInterval(() => {
-  require('../lib/clean-torrents')()
-}, cleanDelay)
