@@ -152,6 +152,7 @@ The following commands can be run using `pete [command]`:
 
 Like most open source projects, Pete stands on the shoulders of other open source projects:
 - [OSMC](https://osmc.tv/)
+- [WebTorrent](https://webtorrent.io/)
 - [moviedb](https://github.com/impronunciable/moviedb)
 - [eztv-api-pt](https://github.com/ChrisAlderson/eztv-api-pt)
 - [transmision](https://github.com/FLYBYME/node-transmission)
