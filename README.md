@@ -56,6 +56,12 @@ After account creation, go to Settings > Account and Create Access Token. Keep t
 
 If you're using OSMC, then install [Transmission](https://transmissionbt.com/) through its app store. Otherwise, install it by whatever means is appropriate for your OS. The important takeaway for this step is to make sure Remote RPC is on and you know the url (likely localhost), the username, and password for the remote user to give to Pete during configuration.
 
+Manual installation of Transmission if you don't want to use the app store:
+
+```
+sudo apt-get install armv7-transmission-app-osmc
+```
+
 ### Node
 
 Now you need to install Node. If you're using OSMC on a Pi, installing Node depends on which Pi version you're using because of the different architecture. There are a couple ways to get Node installed. I followed the steps written by [Conall Laverty](https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi), which have been summarized below.
@@ -137,6 +143,8 @@ If you're not using Linux or you wish to not use the daemon, there are lots of a
 ### Transmission
 
 You'll need to configure Transmission somewhere in the mix. Pete has a "torrent finished" script that will send a Pushbullet notification concerning the finished item. In Transmission's `settings.json`, set `script-torrent-done-filename` to `/path/to/pete/scripts/download-finished.js` and `script-torrent-done-enabled` to `true`.
+
+To find where Pete is installed if you installed it with `npm i -g pete`, run `npm root -g` and append `pete/scripts/download-finished.js` to the path that gets returned. You should end up with something like `/usr/local/lib/node_modules/pete/scripts/download-finished.js`.
 
 ## Usage
 
