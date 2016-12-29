@@ -37,7 +37,7 @@ Next we need to get an API key to access your watchlists and other information a
 1. On your account page, to to API and follow the link to request a new API key.
 2. Follow the link for the "Developer" key type.
 3. Accept the terms.
-4. This will open a form to fill out for obtain a key.
+4. This will open a form to fill out to obtain a key.
   - Application Name: anything you want, but probably something like "Pete"
   - Application URL: http://localhost
   - Summary: whatever you want, but it has a minimum character validation, so something like: "Pulls my watchlist information (tv and movies) and automatically downloads them."
