@@ -5,6 +5,7 @@ const winston = require('../lib/logger'),
       mediaDb = require('../lib/media-db'),
       kodi = require('kodi-ws'),
       notify = require('../lib/pushbullet').downloadFinished,
+      fs = require('fs'),
       label = require('../lib/show-label')
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
@@ -20,8 +21,19 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
   }
 
   // Set the transmission id to null to prevent problems later
-  if (item)
+  if (item) {
     mediaDb.db.run('update downloads set transmission_id = null where id = ?', [item.id])
+
+    // Since right now Transmission doesn't honor unwanted files,
+    // we have to manually delete unwanted files
+    fs.stat(item.download_dir, (err, stats) => {
+      if (err) {
+        return winston.error(err)
+      }
+
+      winston.info(`File exists at completed location for ${item.name} (${item.id})`)
+    })
+  }
 
   // Send a notification
   winston.info(msg)
