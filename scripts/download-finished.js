@@ -6,7 +6,17 @@ const winston = require('../lib/logger'),
       kodi = require('kodi-ws'),
       notify = require('../lib/pushbullet').downloadFinished,
       fs = require('fs'),
-      label = require('../lib/show-label')
+      p = require('path'),
+      label = require('../lib/show-label'),
+      eachOfSeries = require('async').eachOfSeries,
+      refresh = () => {
+        // Refresh the library
+        kodi('localhost', 9090).then(function(connection) {
+          connection.VideoLibrary.Scan()
+        })
+      }
+
+winston.log(`TR_TORRENT_DIR: ${process.env.TR_TORRENT_DIR}`)
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   let msg
@@ -31,16 +41,41 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
         return winston.error(err)
       }
 
-      winston.info(`File exists at completed location for ${item.name} (${item.id})`)
+      if (stats.isDirectory()) {
+        fs.readdir(item.download_dir, (err, files) => {
+          if (err) {
+            return winston.error(err)
+          }
+
+          const toDelete = files.filter(filename => {
+            return (filename.search(/.(mkv|avi|mp4|srt|idx|sub)$/gi) === -1 ||
+                    p.basename(filename, p.extname(filename)).toUpperCase() === 'RARBG.COM' ||
+                    filename.search(/sample/gi) !== -1)
+          })
+
+          winston.info(`Deleting unwanted files: ${toDelete.join(', ')}`)
+
+          eachOfSeries(toDelete, (filename, i, cb) => {
+            fs.unlink(filename, err => {
+              if (err) {
+                winston.error(err)
+              }
+
+              cb()
+            })
+          }, () => {
+            refresh()
+          })
+        })
+      } else {
+        refresh()
+      }
     })
+  } else {
+    refresh()
   }
 
   // Send a notification
   winston.info(msg)
   notify(msg)
-
-  // Refresh the library
-  kodi('localhost', 9090).then(function(connection) {
-    connection.VideoLibrary.Scan()
-  })
 })
