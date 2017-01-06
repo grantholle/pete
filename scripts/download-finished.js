@@ -11,12 +11,16 @@ const winston = require('../lib/logger'),
       eachOfSeries = require('async').eachOfSeries,
       refresh = () => {
         // Refresh the library
-        kodi('localhost', 9090).then(function(connection) {
-          connection.VideoLibrary.Scan()
+        kodi('localhost', 9090).then(connection => {
+          connection.VideoLibrary.Scan().then(() => {
+            process.nextTick(() => {
+              process.exit()
+            })
+          })
         })
       }
 
-winston.log(`TR_TORRENT_DIR: ${process.env.TR_TORRENT_DIR}`)
+winston.info(`TR_TORRENT_DIR: ${process.env.TR_TORRENT_DIR}`)
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   let msg
@@ -56,7 +60,7 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
           winston.info(`Deleting unwanted files: ${toDelete.join(', ')}`)
 
           eachOfSeries(toDelete, (filename, i, cb) => {
-            fs.unlink(filename, err => {
+            fs.unlink(p.join(item.download_dir, filename), err => {
               if (err) {
                 winston.error(err)
               }
