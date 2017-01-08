@@ -24,7 +24,7 @@ fs.stat(p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME), (err, s
   if (err)
     return winston.info('TR_TORRENT_DIR + TR_TORRENT_NAME not found')
 
-  winston.info('TR_TORRENT_DIR + TR_TORRENT_NAME found')
+  winston.info('TR_TORRENT_DIR + TR_TORRENT_NAME found: ' + p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME))
 })
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
