@@ -33,6 +33,10 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
     msg = `${item.name} has finished downloading.`
   }
 
+  // Send a notification
+  winston.info(msg)
+  notify(msg)
+
   // Set the transmission id to null to prevent problems later
   if (item) {
     mediaDb.db.run('update downloads set transmission_id = null where id = ?', [item.id])
@@ -78,7 +82,4 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
     refresh()
   }
 
-  // Send a notification
-  winston.info(msg)
-  notify(msg)
 })
