@@ -9,6 +9,7 @@ const winston = require('../lib/logger'),
       p = require('path'),
       label = require('../lib/show-label'),
       eachOfSeries = require('async').eachOfSeries,
+      downloadPath = p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME),
       refresh = () => {
         // Refresh the library
         kodi('localhost', 9090).then(connection => {
@@ -19,13 +20,6 @@ const winston = require('../lib/logger'),
           })
         })
       }
-
-fs.stat(p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME), (err, stats) => {
-  if (err)
-    return winston.info('TR_TORRENT_DIR + TR_TORRENT_NAME not found')
-
-  winston.info('TR_TORRENT_DIR + TR_TORRENT_NAME found: ' + p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME))
-})
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   let msg
@@ -45,13 +39,13 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
 
     // Since right now Transmission doesn't honor unwanted files,
     // we have to manually delete unwanted files
-    fs.stat(item.download_dir, (err, stats) => {
+    fs.stat(downloadPath, (err, stats) => {
       if (err) {
         return winston.error(err)
       }
 
       if (stats.isDirectory()) {
-        fs.readdir(item.download_dir, (err, files) => {
+        fs.readdir(downloadPath, (err, files) => {
           if (err) {
             return winston.error(err)
           }
@@ -65,7 +59,7 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
           winston.info(`Deleting unwanted files: ${toDelete.join(', ')}`)
 
           eachOfSeries(toDelete, (filename, i, cb) => {
-            fs.unlink(p.join(item.download_dir, filename), err => {
+            fs.unlink(p.join(downloadPath, filename), err => {
               if (err) {
                 winston.error(err)
               }
