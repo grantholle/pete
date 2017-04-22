@@ -13,7 +13,9 @@ const winston = require('../lib/logger'),
       refresh = () => {
         // Refresh the library
         kodi('localhost', 9090).then(connection => {
+          winston.info('Connected to Kodi')
           connection.VideoLibrary.Scan().then(() => {
+            winston.info('Scanned library')
             process.nextTick(() => {
               process.exit()
             })
@@ -51,7 +53,7 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
       if (stats.isDirectory()) {
         fs.readdir(downloadPath, (err, files) => {
           if (err) {
-            return winston.error(err)
+            return winston.error(`Reading ${downloadPath} failed`, err)
           }
 
           const toDelete = files.filter(filename => {
@@ -65,7 +67,7 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
           eachOfSeries(toDelete, (filename, i, cb) => {
             fs.unlink(p.join(downloadPath, filename), err => {
               if (err) {
-                winston.error(err)
+                winston.error(`Error deleting file ${p.join(downloadPath, filename)}`, err)
               }
 
               cb()
