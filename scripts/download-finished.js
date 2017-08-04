@@ -59,7 +59,7 @@ function renameUnwanted() {
     const torrent = args.torrents[0]
 
     eachOfSeries(torrent.files, (file, index, cb) => {
-      if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) !== -1 && file.length < 50000000) {
+      if (file.name.search(/.*(sample|rarbg\.com).*.(mkv|avi|mp4|mov)$/gi) !== -1) {
         transmission.rename(process.env.TR_TORRENT_ID, file.name, 'unwanted', (err, args) => {
           if (err) {
             winston.error(err)
