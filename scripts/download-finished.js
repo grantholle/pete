@@ -65,12 +65,12 @@ function renameUnwanted() {
             winston.error(err)
           }
 
-          cb'()'
+          cb()
         })
       } else {
         cb()
       }
-    }, () {
+    }, () => {
       refresh()
     })
   })
