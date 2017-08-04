@@ -10,6 +10,7 @@ const winston = require('../lib/logger'),
       label = require('../lib/show-label'),
       eachOfSeries = require('async').eachOfSeries,
       downloadPath = p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME),
+      transmission = require('../lib/transmission'),
       refresh = () => {
         // Refresh the library
         kodi('localhost', 9090).then(connection => {
@@ -23,6 +24,10 @@ const winston = require('../lib/logger'),
       }
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
+  if (err) {
+    winston.error('Error in finished script', err)
+  }
+
   let msg
 
   // If the item doesn't exist in the db, else if the item is a tv show, else it's a movie
@@ -43,8 +48,33 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
   winston.info(msg)
   notify(msg)
 
-  refresh()
+  renameUnwanted()
 })
+
+// Since deleting files causes issues with seeding,
+// Just rename the unwanted files so Kodi doesn't
+// think they're 'real' video files
+function renameUnwanted() {
+  transmission.get(process.env.TR_TORRENT_ID, (err, args) => {
+    const torrent = args.torrents[0]
+
+    eachOfSeries(torrent.files, (file, index, cb) => {
+      if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) !== -1 && file.length < 50000000) {
+        transmission.rename(process.env.TR_TORRENT_ID, file.name, 'unwanted', (err, args) => {
+          if (err) {
+            winston.error(err)
+          }
+
+          cb'()'
+        })
+      } else {
+        cb()
+      }
+    }, () {
+      refresh()
+    })
+  })
+}
 
 function removeUnwanted () {
   // Since right now Transmission doesn't honor unwanted files,
