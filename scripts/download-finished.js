@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 'use strict'
 
+// process.env.TR_TORRENT_DIR = '/media/media/Movies'
+// process.env.TR_TORRENT_NAME = 'The.Truman.Show.1998.1080p.BluRay.x264-TiMELORDS'
+// process.env.TR_TORRENT_ID = 72
+
 const winston = require('../lib/logger'),
       mediaDb = require('../lib/media-db'),
       kodi = require('kodi-ws'),
@@ -55,12 +59,18 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
 // Just rename the unwanted files so Kodi doesn't
 // think they're 'real' video files
 function renameUnwanted() {
-  transmission.get(process.env.TR_TORRENT_ID, (err, args) => {
+  const id = parseInt(process.env.TR_TORRENT_ID, 10)
+
+  transmission.get(id, (err, args) => {
     const torrent = args.torrents[0]
+
+    if (!torrent) {
+      return winston.error(`Could not find transmission id ${process.env.TR_TORRENT_ID} for post processing`)
+    }
 
     eachOfSeries(torrent.files, (file, index, cb) => {
       if (file.name.search(/.*(sample|rarbg\.com).*.(mkv|avi|mp4|mov)$/gi) !== -1) {
-        transmission.rename(process.env.TR_TORRENT_ID, file.name, 'unwanted', (err, args) => {
+        transmission.rename(id, file.name, 'unwanted', (err, args) => {
           if (err) {
             winston.error(err)
           }
