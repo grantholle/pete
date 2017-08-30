@@ -12,6 +12,7 @@
   "dependencies": {
     "async": "^2.5.0",
     "commander": "^2.11.0",
+    "express": "^4.15.4",
     "eztv-api-pt": "^1.0.12",
     "jsonfile": "^2.4.0",
     "kodi-ws": "^2.4.3",
@@ -25,7 +26,7 @@
     "rarbg": "^0.4.4",
     "sanitize-filename": "^1.6.1",
     "sequelize": "^4.7.5",
-    "sqlite3": "^3.1.9",
+    "sqlite3": "3.1.8",
     "transmission": "^0.4.9",
     "webtorrent": "^0.98.19",
     "winston": "^2.3.1",
