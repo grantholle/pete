@@ -23,7 +23,6 @@ This guide makes some assumptions:
 3. If you're using a Pi, then you have an external drive ready and already mounted
 4. If you plan on cloning the repo manually you have git installed
   - `sudo apt-get install git`
-  - `sudo apt-get install build-essential`
 5. You know who Pete Hornberger is
 
 Installation and configuration can be a little tedious, but hopefully not too bad, since that's why I made this in the first place.
@@ -58,7 +57,7 @@ If you're using OSMC, then install [Transmission](https://transmissionbt.com/) t
 
 Manual installation of Transmission if you don't want to use the app store:
 
-```
+```bash
 sudo apt-get install armv7-transmission-app-osmc
 ```
 
@@ -66,16 +65,31 @@ sudo apt-get install armv7-transmission-app-osmc
 
 Now you need to install Node. If you're using OSMC on a Pi, installing Node depends on which Pi version you're using because of the different architecture. There are a couple ways to get Node installed. I followed the steps written by [Conall Laverty](https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi), which have been summarized below.
 
+You can also install it with a simple `apt-get install nodejs`, which is easier than the process described below. You first need to add a new package repository from NodeSource, then run the install command.
+
+```bash
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt install nodejs
+```
+
 At the time of writing this, Node 6.8 is the latest. Versions come out rather quickly so it won't take much time for this to become outdated. Pete will likely work with Node 4+ (untested, but an assumption), but was developed using version 6.4, so it's wise to use something in the 6+'s.
 
-```
+```bash
 wget https://nodejs.org/dist/v6.8.1/node-v6.8.1-linux-armv7l.tar.gz
 tar -xvf node-v6.8.1-linux-armv7l.tar.gz
 cd node-v6.8.1-linux-armv7l
-sudo cp -R * /usr/local/
+sudo cp -R * /usr/local/node
 ```
 
 To check Node.js is properly installed and you have the right version, run the command `node -v`
+
+### Build Essential
+
+To install the sqlite3 dependency, you must have build-essential installed.
+
+```bash
+sudo apt-get install build-essential
+```
 
 ## Installation and Configuration
 
@@ -87,7 +101,7 @@ You can also clone the [repository](https://github.com/grantholle/pete) and link
 
 You can put it anywhere, but I'd suggest putting it in your home directory.
 
-```
+```bash
 cd ~
 git clone https://github.com/grantholle/pete.git
 cd pete
