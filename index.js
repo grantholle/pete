@@ -27,7 +27,7 @@ program
   .alias('m')
   .description('Fetches your TMdb movie watchlist and finds them')
   .action(() => {
-    // require(`./lib/movies`)()
+    commands.movies(config)
   })
 
 program
@@ -43,7 +43,7 @@ program
   .alias('f')
   .description('Saves a service file to run Pete as a service on boot')
   .action(() => {
-    // require(`./lib/add-service-file`)()
+    commands.serviceFile(config)
   })
 
 
