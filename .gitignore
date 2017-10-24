@@ -2,3 +2,4 @@ node_modules
 utility.js
 npm-debug.log
 data.json
+.config
