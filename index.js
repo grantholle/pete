@@ -16,9 +16,7 @@ program
 program
   .command('tv')
   .description('Fetches your TMdb TV watchlist and finds new episodes of your shows')
-  .action(() => {
-    // require(`./lib/tv`)()
-  })
+  .action(() => commands.tv(config))
 
 program
   .command('movies')
