@@ -2,7 +2,8 @@
 
 const program = require('commander'),
       config = require('./lib/config'),
-      commands = require('./lib/commands')
+      commands = require('./lib/commands'),
+      winston = require('./lib/logger')
 
 program.version(require('./package.json').version)
 
@@ -37,3 +38,6 @@ program
   .action(() => commands.serviceFile(config))
 
 program.parse(process.argv)
+
+process.on('uncaughtException', e => winston.error(e))
+process.on('unhandledRejection', e => winston.error(e))
