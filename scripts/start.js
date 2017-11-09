@@ -5,14 +5,14 @@ const minutely = 60 * 1000
 const thirteenMinutes = 13 * minutely
 const hourly = 60 * minutely
 
-let tvInterval = setInterval(() => {
+setInterval(() => {
   require('../lib/tv')()
 }, hourly)
 
-let moviesInterval = setInterval(() => {
+setInterval(() => {
   require('../lib/movies')()
 }, thirteenMinutes)
 
-let cleanInterval = setInterval(() => {
+setInterval(() => {
   require('../lib/clean-torrents')()
 }, hourly)
