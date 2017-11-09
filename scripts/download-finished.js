@@ -62,6 +62,10 @@ function renameUnwanted () {
   const id = parseInt(process.env.TR_TORRENT_ID, 10)
 
   transmission.get(id, (err, args) => {
+    if (err) {
+      return winston.error(err)
+    }
+
     const torrent = args.torrents[0]
 
     if (!torrent) {
