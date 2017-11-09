@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 const program = require('commander'),
-      config = require('./lib/config'),
-      commands = require('./lib/commands'),
-      winston = require('./lib/logger')
+  config = require('./lib/config'),
+  commands = require('./lib/commands'),
+  winston = require('./lib/logger')
 
 program.version(require('./package.json').version)
 

@@ -2,9 +2,9 @@
 'use strict'
 
 const minutely = 60 * 1000,
-      cleanDelay = minutely * 2,
-      thirteenMinutes = 13 * minutely,
-      hourly = 60 * minutely
+  cleanDelay = minutely * 2,
+  thirteenMinutes = 13 * minutely,
+  hourly = 60 * minutely
 
 let tvInterval = setInterval(() => {
   require('../lib/tv')()

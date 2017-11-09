@@ -6,6 +6,9 @@
   "bin": {
     "pete": "index.js"
   },
+  "scripts": {
+    "style": "./node_modules/.bin/standard"
+  },
   "author": "Grant Holle (https://github.com/grantholle)",
   "repository": "https://github.com/grantholle/pete",
   "license": "MIT",

@@ -6,26 +6,26 @@
 // process.env.TR_TORRENT_ID = 72
 
 const winston = require('../lib/logger'),
-      mediaDb = require('../lib/media-db'),
-      kodi = require('kodi-ws'),
-      notify = require('../lib/pushbullet').downloadFinished,
-      fs = require('fs'),
-      p = require('path'),
-      label = require('../lib/show-label'),
-      eachOfSeries = require('async').eachOfSeries,
-      downloadPath = p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME),
-      transmission = require('../lib/transmission'),
-      refresh = () => {
+  mediaDb = require('../lib/media-db'),
+  kodi = require('kodi-ws'),
+  notify = require('../lib/pushbullet').downloadFinished,
+  fs = require('fs'),
+  p = require('path'),
+  label = require('../lib/show-label'),
+  eachOfSeries = require('async').eachOfSeries,
+  downloadPath = p.join(process.env.TR_TORRENT_DIR, process.env.TR_TORRENT_NAME),
+  transmission = require('../lib/transmission'),
+  refresh = () => {
         // Refresh the library
-        kodi('localhost', 9090).then(connection => {
-          connection.VideoLibrary.Scan().then(() => {
-            winston.info('Scanned library')
-            process.nextTick(() => {
-              process.exit()
-            })
-          })
+    kodi('localhost', 9090).then(connection => {
+      connection.VideoLibrary.Scan().then(() => {
+        winston.info('Scanned library')
+        process.nextTick(() => {
+          process.exit()
         })
-      }
+      })
+    })
+  }
 
 mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env.TR_TORRENT_ID], (err, item) => {
   if (err) {
@@ -58,7 +58,7 @@ mediaDb.db.get('select * from downloads where transmission_id = ?', [process.env
 // Since deleting files causes issues with seeding,
 // Just rename the unwanted files so Kodi doesn't
 // think they're 'real' video files
-function renameUnwanted() {
+function renameUnwanted () {
   const id = parseInt(process.env.TR_TORRENT_ID, 10)
 
   transmission.get(id, (err, args) => {
