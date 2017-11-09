@@ -20,15 +20,15 @@ program
   .action(() => commands.tv(config))
 
 program
-  .command('show <tmdb_id>')
+  .command('show <tmdb id>')
   .description('Fetches episodes for a show based on the TMdb ID')
   .option('-s, --season <season>', 'The season at which to start', null, 1)
   .option('-q, --quality <quality>', 'The desired quality you want', null, 'HDTV')
   .option('-f, --force', 'Download despite existing entries in database')
-  .action((tmdb_id, options) => {
+  .action((tmdbId, options) => {
     options.season = options.season ? parseInt(options.season, 10) : 1
     options.quality = options.quality ? options.quality : 'HDTV'
-    commands.show(config, tmdb_id, options)
+    commands.show(config, tmdbId, options)
   })
 
 program
