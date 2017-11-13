@@ -1,6 +1,6 @@
 {
   "name": "pete",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Automatically download items in your TMdb watchlists",
   "main": "index.js",
   "bin": {
@@ -16,28 +16,22 @@
     "async": "^2.5.0",
     "colors": "^1.1.2",
     "commander": "^2.11.0",
-    "express": "^4.16.2",
     "eztv-b": "^1.0.0",
     "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
-    "jsonfile": "^2.4.0",
-    "kodi-ws": "^2.4.3",
     "lodash": "^4.17.4",
     "lokijs": "^1.5.1",
     "moment": "^2.19.1",
     "moviedb": "^0.2.10",
-    "parse-torrent": "^5.8.3",
     "pushbullet": "^1.4.3",
     "rarbg": "^1.0.1",
     "sanitize-filename": "^1.6.1",
-    "sequelize": "^4.15.0",
-    "sqlite3": "3.1.8",
     "transmission": "^0.4.9",
     "webtorrent": "^0.98.20",
     "winston": "^2.4.0",
     "yify-search": "^1.0.0"
   },
   "devDependencies": {
-    "standard": "^10.0.3"
+    "standard": "*"
   }
 }
