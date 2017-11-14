@@ -49,6 +49,12 @@ program
   .description('Saves a service file to run Pete as a service on boot')
   .action(() => commands.serviceFile(config))
 
+program
+  .command('clean-torrents')
+  .alias('c')
+  .description('Removes torrents that have met or exceeded the configured ratio limit')
+  .action(commands.clean)
+
 program.parse(process.argv)
 
 process.on('uncaughtException', e => winston.error(e))
