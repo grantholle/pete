@@ -27,6 +27,7 @@
     "rarbg": "^1.0.1",
     "sanitize-filename": "^1.6.1",
     "transmission": "^0.4.9",
+    "webtorrent": "^0.98.20",
     "winston": "^2.4.0",
     "yify-search": "^1.0.0"
   },
