@@ -4,6 +4,9 @@ const program = require('commander')
 const config = require('./lib/config')
 const commands = require('./lib/commands')
 const winston = require('./lib/logger')
+const moviedb = require('./lib/moviedb')
+const inquirer = require('inquirer')
+const showPrompt = require('./lib/prompts').showSearch
 
 program.version(require('./package.json').version)
 
@@ -20,15 +23,36 @@ program
   .action(() => commands.tv(config))
 
 program
-  .command('show <tmdb id>')
-  .description('Fetches episodes for a show based on the TMdb ID')
+  .command('show <tmdb_id|show_name>')
+  .description('Fetches episodes for a show based on the TMdb ID or show name')
   .option('-s, --season <season>', 'The season at which to start', null, 1)
   .option('-q, --quality <quality>', 'The desired quality you want', null, 'HDTV')
   .option('-f, --force', 'Download despite existing entries in database')
   .action((tmdbId, options) => {
     options.season = options.season ? parseInt(options.season, 10) : 1
     options.quality = options.quality ? options.quality : 'HDTV'
-    commands.show(config, tmdbId, options)
+
+    // If the input was a number, assume it's the tmdb id,
+    // otherwise we need to search for id based on the name
+    if (!isNaN(parseFloat(tmdbId))) {
+      return commands.show(config, tmdbId, options)
+    }
+
+    winston.info(`Searching for ${tmdbId}...`)
+
+    moviedb.searchTv(tmdbId).then(results => {
+      if (results.total_results === 1) {
+        return commands.show(config, results.results[0].id, options)
+      }
+
+      // Prompt the user to select the correct show
+      inquirer.prompt(showPrompt(results.results)).then(answer => {
+        commands.show(config, answer.show, options)
+      })
+    }).catch(err => {
+      winston.error(err)
+      process.exit()
+    })
   })
 
 program
