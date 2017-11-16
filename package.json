@@ -22,7 +22,7 @@
     "lodash": "^4.17.4",
     "lokijs": "^1.5.1",
     "moment": "^2.19.1",
-    "moviedb": "^0.2.10",
+    "moviedb": "git+https://github.com/grantholle/moviedb.git",
     "pushbullet": "^1.4.3",
     "rarbg": "^1.0.1",
     "sanitize-filename": "^1.6.1",
