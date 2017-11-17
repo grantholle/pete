@@ -6,7 +6,7 @@ const commands = require('./lib/commands')
 const winston = require('./lib/logger')
 const moviedb = require('./lib/moviedb')
 const inquirer = require('inquirer')
-const showPrompt = require('./lib/prompts').showSearch
+const prompts = require('./lib/prompts').searchResults
 
 program.version(require('./package.json').version)
 
@@ -40,13 +40,13 @@ program
 
     winston.info(`Searching for ${tmdbId}...`)
 
-    moviedb.searchTv(tmdbId).then(results => {
+    moviedb.searchTv({ query: tmdbId }).then(results => {
       if (results.total_results === 1) {
         return commands.show(config, results.results[0].id, options)
       }
 
       // Prompt the user to select the correct show
-      inquirer.prompt(showPrompt(results.results)).then(answer => {
+      inquirer.prompt(prompts.shows(results.results)).then(answer => {
         commands.show(config, answer.show, options)
       })
     }).catch(err => {
@@ -57,9 +57,30 @@ program
 
 program
   .command('movies')
-  .alias('m')
   .description('Fetches your TMdb movie watchlist and finds them')
   .action(() => commands.movies(config))
+
+program
+  .command('movie <tmdb_id|title>')
+  .alias('m')
+  .description('Search for a movie to start downloading based on title or TMdb ID')
+  .action(tmdbId => {
+    if (!isNaN(parseFloat(tmdbId))) {
+      return commands.movie(config, tmdbId)
+    }
+
+    winston.info(`Searching for ${tmdbId}...`)
+
+    moviedb.searchMovie({ query: tmdbId }).then(results => {
+      if (results.total_results === 1) {
+        return commands.movie(config, results.results[0].id)
+      }
+
+      inquirer.prompt(prompts.movies(results.results)).then(answer => {
+        commands.movie(config, answer.movie)
+      })
+    })
+  })
 
 program
   .command('tv-setup')
