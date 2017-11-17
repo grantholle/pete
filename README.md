@@ -106,7 +106,7 @@ pete show 'last man on earth' --season 3 --episode 6 --quality 1080p --force
 
 # Searches for episode 6 of season 3 ONLY
 # with a desired quality of 1080p but will fallback if that quality can't be found
-# and ignores if you've already downloaded them
+# and ignores if you've already downloaded it
 pete show 'last man on earth' --season 3 --episode 6 --quality 1080p --force --one
 ```
 
