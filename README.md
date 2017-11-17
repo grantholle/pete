@@ -72,7 +72,7 @@ pete tv
 
 ### `show`
 
-Download all the episodes of a show. You can search by show name or TMdb id. Names need to be wrapped in quotes. If more than one show is found for your search string you'll be prompted to confirm which show you want to download. See below for the options that are available. If you don't define a quality, HDTV will be used automatically, but will search for other qualities if it can't find HDTV.
+Download all the episodes (or just one) of a show. You can search by show name or TMdb id. Names need to be wrapped in quotes. If more than one show is found for your search string you'll be prompted to confirm which show you want to download. See below for the options that are available. If you don't define a quality, HDTV will be used automatically, but will search for other qualities if it can't find HDTV. This is the easiest way to find an episode of _any_ show to download. 💯
 
 ```
 # Searches for all episodes of all the seasons for a show
@@ -89,6 +89,16 @@ pete show 'last man on earth' --season 3 --force
 # with a desired quality of 1080p but will fallback if that quality can't be found
 # and ignores if you've already downloaded them
 pete show 'last man on earth' --season 3 --quality 1080p --force
+
+# Searches for all episodes starting at episode 6 of season 3
+# with a desired quality of 1080p but will fallback if that quality can't be found
+# and ignores if you've already downloaded them
+pete show 'last man on earth' --season 3 --episode 6 --quality 1080p --force
+
+# Searches for episode 6 of season 3 ONLY
+# with a desired quality of 1080p but will fallback if that quality can't be found
+# and ignores if you've already downloaded them
+pete show 'last man on earth' --season 3 --episode 6 --quality 1080p --force --one
 ```
 
 ### `movies`
