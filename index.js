@@ -57,7 +57,7 @@ program
 
 program
   .command('movies')
-  .description('Fetches your TMdb movie watchlist and finds them')
+  .description('Download the movies in your TMdb movie watchlist')
   .action(() => commands.movies(config))
 
 program
