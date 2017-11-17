@@ -1,4 +1,4 @@
-```
+```bash
 $$$$$$$\             $$\
 $$  __$$\            $$ |
 $$ |  $$ | $$$$$$\ $$$$$$\    $$$$$$\
@@ -32,7 +32,7 @@ See the wiki pages about [preparation](https://github.com/grantholle/pete/wiki/P
 
 All the commands:
 
-```
+```bash
 pete -h
 
   Usage: pete [options] [command]
@@ -62,7 +62,7 @@ Example usage of the commands.
 
 After adding shows in your TV watchlist, run this if you don't want the default configuration: most recent season, episode 1, HDTV quality.
 
-```
+```bash
 # Will fetch your TV watchlist and ask you which shows you want to configure
 pete tv-setup
 
@@ -72,7 +72,7 @@ pete s
 
 ### `tv`
 
-```
+```bash
 # Fetches the shows in your tv watchlist, checks if there's any new episodes that you need download
 # It will use the starting season, episode and quality that was configured when running `pete tv-setup`.
 # If no existing configuration is found, it will start at the most current season episode 1 in HDTV quality
@@ -83,7 +83,7 @@ pete tv
 
 Download all the episodes (or just one) of a show. You can search by show name or TMdb id. Names need to be wrapped in quotes. If more than one show is found for your search string you'll be prompted to confirm which show you want to download. See below for the options that are available. If you don't define a quality, HDTV will be used automatically, but will search for other qualities if it can't find HDTV. This is the easiest way to find an episode of _any_ show to download. 💯
 
-```
+```bash
 # Searches for all episodes of all the seasons for a show
 pete show 'last man on earth' # or pete show 61888
 
@@ -112,7 +112,7 @@ pete show 'last man on earth' --season 3 --episode 6 --quality 1080p --force --o
 
 ### `movies`
 
-```
+```bash
 # Checks your movie watchlist and downloads them using configuration from installation
 pete movies
 ```
@@ -121,7 +121,7 @@ pete movies
 
 Download a movie from a movie title or TMdb id if you have it. Uses the configuration for quality.
 
-```
+```bash
 # Searches for all episodes of all the seasons for a show
 pete movie 'top gun'
 # or
@@ -132,7 +132,7 @@ pete movie 744
 
 Creates a systemd file for Linux. Only applies to Linux platforms. It will prompt you for your sudo password.
 
-```
+```bash
 pete f
 ```
 
@@ -140,7 +140,7 @@ pete f
 
 Checks your torrents in Transmission and removes the torrents that have met or exceeded your Transmission ratio limit. This is just a utility function.
 
-```
+```bash
 pete clean-torrents
 ```
 
