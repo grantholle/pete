@@ -5,8 +5,8 @@ After=network.target
 [Service]
 ExecStart=$start
 Restart=always
-User=osmc
-Group=osmc
+User=$user
+Group=$group
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/local
 Environment=NODE_ENV=production
 WorkingDirectory=$dir

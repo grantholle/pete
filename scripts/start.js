@@ -1,19 +1,15 @@
 #!/usr/bin/env node
 'use strict'
 
-const minutely = 60 * 1000,
-      cleanDelay = minutely * 2,
-      thirteenMinutes = 13 * minutely,
-      hourly = 60 * minutely
+const minutely = 60 * 1000
+const thirteenMinutes = 13 * minutely
+const hourly = 60 * minutely
+const config = require('../lib/config')
 
-let tvInterval = setInterval(() => {
-  require('../lib/tv')()
+setInterval(() => {
+  require('../lib/commands/tv')(config)
 }, hourly)
 
-let moviesInterval = setInterval(() => {
-  require('../lib/movies')()
+setInterval(() => {
+  require('../lib/commands/movies')(config)
 }, thirteenMinutes)
-
-let cleanInterval = setInterval(() => {
-  require('../lib/clean-torrents')()
-}, hourly)

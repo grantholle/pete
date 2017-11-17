@@ -1,36 +1,37 @@
 {
   "name": "pete",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Automatically download items in your TMdb watchlists",
   "main": "index.js",
   "bin": {
     "pete": "index.js"
   },
+  "scripts": {
+    "lint": "./node_modules/.bin/standard"
+  },
   "author": "Grant Holle (https://github.com/grantholle)",
   "repository": "https://github.com/grantholle/pete",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.0",
+    "colors": "^1.1.2",
     "commander": "^2.11.0",
-    "express": "^4.15.4",
-    "eztv-api-pt": "^1.0.12",
+    "eztv-b": "^1.0.1",
+    "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
-    "jsonfile": "^2.4.0",
-    "kodi-ws": "^2.4.3",
-    "mkdirp": "^0.5.1",
-    "moment": "^2.18.1",
-    "moviedb": "^0.2.10",
-    "open": "0.0.5",
-    "parse-torrent": "^5.8.3",
-    "prompt": "^1.0.0",
+    "lodash": "^4.17.4",
+    "lokijs": "^1.5.1",
+    "moment": "^2.19.2",
+    "moviedb": "git+https://github.com/grantholle/moviedb.git",
     "pushbullet": "^1.4.3",
-    "rarbg": "^0.4.4",
+    "rarbg": "^1.1.0",
     "sanitize-filename": "^1.6.1",
-    "sequelize": "^4.7.5",
-    "sqlite3": "3.1.8",
     "transmission": "^0.4.9",
-    "webtorrent": "^0.98.19",
-    "winston": "^2.3.1",
+    "webtorrent": "^0.98.20",
+    "winston": "^2.4.0",
     "yify-search": "^1.0.0"
+  },
+  "devDependencies": {
+    "standard": "*"
   }
 }
