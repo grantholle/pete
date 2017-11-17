@@ -1,4 +1,13 @@
-# Pete
+```
+$$$$$$$\             $$\
+$$  __$$\            $$ |
+$$ |  $$ | $$$$$$\ $$$$$$\    $$$$$$\
+$$$$$$$  |$$  __$$\\_$$  _|  $$  __$$\
+$$  ____/ $$$$$$$$ | $$ |    $$$$$$$$ |
+$$ |      $$   ____| $$ |$$\ $$   ____|
+$$ |      \$$$$$$$\  \$$$$  |\$$$$$$$\
+\__|       \_______|  \____/  \_______|
+```
 
 Pete is a Nodejs CLI and daemon that automatically downloads TV show episodes and movies using [themoviedb.org](https://www.themoviedb.org/ "TMdb") watchlists and [Transmission](https://transmissionbt.com/).
 
