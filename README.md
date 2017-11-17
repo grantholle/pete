@@ -8,8 +8,12 @@ I say opinionated because it uses TMdb to track what you want to watch and Trans
 
 ## Features
 
+- Hands-off - automatically find show episodes without searching yourself
+- Easy configuration - set it and forget it!
 - You can tell Pete what you want to download from anywhere using your TMdb watchlists
--
+- Download a movie or episodes of a show independently
+- Automatically rename movies and episodes in a media server-friendly format
+- Receive notifications when things start and finish via Pushbullet
 
 ## Installation
 
