@@ -10,7 +10,6 @@ const prompts = require('./lib/prompts').searchResults
 
 program.version(require('./package.json').version)
 
-// Install command
 program
   .command('install')
   .alias('i')
