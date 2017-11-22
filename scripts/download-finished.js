@@ -21,12 +21,8 @@ retrieveDatabase().then(database => {
   // If there wasn't an entry in our database
   // Parse the name and make a prettier name
   if (!existingTorrent) {
-    const parsed = ptt.parse(process.env.TR_TORRENT_NAME)
-    const name = parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (parsed.year)`
-
     torrent = {
-      transmission_id: process.env.TR_TORRENT_ID,
-      name
+      transmission_id: torrentId
     }
   }
 
@@ -42,6 +38,11 @@ retrieveDatabase().then(database => {
 
     const torrentInfo = torrents.torrents[0]
     const files = torrentInfo.files
+
+    if (!existingTorrent) {
+      const parsed = ptt.parse(torrentInfo.name)
+      torrent.name = parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (${parsed.year})`
+    }
 
     // Iterate over all the files and rename appropriately
     async.eachOfSeries(files, (file, index, callback) => {
