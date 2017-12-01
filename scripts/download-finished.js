@@ -46,18 +46,13 @@ retrieveDatabase().then(database => {
 
     // Iterate over all the files and rename appropriately
     async.eachOfSeries(files, (file, index, callback) => {
-      let newName
-
       // Rename it appropriately (TV episode or Movie title and year)
       // We're only interested in non-sample video files
-      if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) !== -1) {
-        newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.name + p.extname(file.name) : `unwanted ${index}`
-      }
-
-      if (!newName) {
+      if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) === -1) {
         return callback()
       }
 
+      const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.name + p.extname(file.name) : `unwanted ${index}`
       transmission.rename(torrentInfo.id, file.name, newName, callback)
     }, err => {
       if (err) {
