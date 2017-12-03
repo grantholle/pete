@@ -3,46 +3,38 @@
 
 const winston = require('../lib/logger')
 const notify = require('../lib/pushbullet').finished
-const retrieveDatabase = require('../lib/database')
+const database = require('../lib/database')
 const transmission = require('../lib/transmission')
 const async = require('async')
 const p = require('path')
-const torrentId = parseFloat(process.env.TR_TORRENT_ID)
 const ptt = require('parse-torrent-title')
 const labelize = require('../lib/show-label')
 
 // Load database
-retrieveDatabase().then(database => {
-  const torrentsCollection = database.torrents
-  const db = database.db
-  let torrent = torrentsCollection.findOne({ transmission_id: torrentId })
-  const existingTorrent = !!torrent
-
+database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
   // If there wasn't an entry in our database
   // Parse the name and make a prettier name
-  if (!existingTorrent) {
+  if (!torrent) {
+    const parsed = ptt.parse(process.env.TR_TORRENT_NAME)
+
     torrent = {
-      transmission_id: torrentId
+      originalName: process.env.TR_TORRENT_NAME,
+      newName: parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (${parsed.year})`
     }
   }
 
   // Fetch the torrent info
-  transmission.get(torrent.transmission_id, (err, torrents) => {
+  transmission.get(parseFloat(process.env.TR_TORRENT_ID), (err, torrents) => {
     if (err) {
       return winston.error(err)
     }
 
     if (!torrents.torrents[0]) {
-      return winston.error(`Could not get information for ${torrent.name}`)
+      return winston.error(`Could not get information for ${torrent.newName}`)
     }
 
     const torrentInfo = torrents.torrents[0]
     const files = torrentInfo.files
-
-    if (!existingTorrent) {
-      const parsed = ptt.parse(torrentInfo.name)
-      torrent.name = parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (${parsed.year})`
-    }
 
     // Iterate over all the files and rename appropriately
     async.eachOfSeries(files, (file, index, callback) => {
@@ -52,7 +44,7 @@ retrieveDatabase().then(database => {
         return callback()
       }
 
-      const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.name + p.extname(file.name) : `unwanted ${index}`
+      const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.newName + p.extname(file.name) : `unwanted ${index}`
       transmission.rename(torrentInfo.id, file.name, newName, callback)
     }, err => {
       if (err) {
@@ -61,19 +53,16 @@ retrieveDatabase().then(database => {
 
       // Rename the root folder
       if (files[0].name.indexOf('/') !== -1) {
-        transmission.rename(torrentInfo.id, p.dirname(files[0].name), torrent.name, winston.error)
+        transmission.rename(torrentInfo.id, p.dirname(files[0].name), torrent.newName, winston.error)
       }
 
       // Log the message and send a notification about what has been completed
-      let msg = `${torrent.name} has finished downloading.`
+      let msg = `${torrent.newName} has finished downloading.`
       winston.info(msg)
       notify(msg)
 
       // Remove the entry and save the database
-      if (existingTorrent) {
-        torrentsCollection.remove(torrent)
-        db.saveDatabase()
-      }
+      database.deleteTorrent(process.env.TR_TORRENT_NAME)
     })
   })
 })
