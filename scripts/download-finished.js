@@ -9,6 +9,7 @@ const async = require('async')
 const p = require('path')
 const ptt = require('parse-torrent-title')
 const labelize = require('../lib/show-label')
+const torrentId = parseFloat(process.env.TR_TORRENT_ID)
 
 // Load database
 database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
@@ -18,13 +19,12 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
     const parsed = ptt.parse(process.env.TR_TORRENT_NAME)
 
     torrent = {
-      originalName: process.env.TR_TORRENT_NAME,
       newName: parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (${parsed.year})`
     }
   }
 
   // Fetch the torrent info
-  transmission.get(parseFloat(process.env.TR_TORRENT_ID), (err, torrents) => {
+  transmission.get(torrentId, (err, torrents) => {
     if (err) {
       return winston.error(err)
     }
@@ -45,7 +45,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
       }
 
       const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.newName + p.extname(file.name) : `unwanted ${index}`
-      transmission.rename(torrentInfo.id, file.name, newName, callback)
+      transmission.rename(torrentId, file.name, newName, callback)
     }, err => {
       if (err) {
         return winston.error(err)
@@ -53,7 +53,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
 
       // Rename the root folder
       if (files[0].name.indexOf('/') !== -1) {
-        transmission.rename(torrentInfo.id, p.dirname(files[0].name), torrent.newName, winston.error)
+        transmission.rename(torrentId, p.dirname(files[0].name), torrent.newName, winston.error)
       }
 
       // Log the message and send a notification about what has been completed
@@ -62,7 +62,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
       notify(msg)
 
       // Remove the entry and save the database
-      database.deleteTorrent(process.env.TR_TORRENT_NAME)
+      database.deleteTorrent(torrentId)
     })
   })
 })
