@@ -12,7 +12,7 @@ const labelize = require('../lib/show-label')
 const torrentId = parseFloat(process.env.TR_TORRENT_ID)
 
 // Load database
-database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
+database.getTorrent(torrentId).then(torrent => {
   // If there wasn't an entry in our database
   // Parse the name and make a prettier name
   if (!torrent) {
