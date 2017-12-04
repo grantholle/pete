@@ -41,7 +41,8 @@ database.getTorrent(torrentId).then(torrent => {
       }
 
       const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.newName + p.extname(file.name) : `unwanted ${index}`
-      transmission.rename(torrentId, file.name, newName).then(callback).catch(callback)
+      transmission.rename(torrentId, file.name, newName).then(callback)
+      callback()
     }, err => {
       if (err) {
         return winston.error(err)
