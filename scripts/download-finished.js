@@ -24,11 +24,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
   }
 
   // Fetch the torrent info
-  transmission.get(torrentId, (err, torrents) => {
-    if (err) {
-      return winston.error(err)
-    }
-
+  transmission.get(torrentId).then(torrents => {
     if (!torrents.torrents[0]) {
       return winston.error(`Could not get information for ${torrent.newName}`)
     }
@@ -45,7 +41,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
       }
 
       const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.newName + p.extname(file.name) : `unwanted ${index}`
-      transmission.rename(torrentId, file.name, newName, callback)
+      transmission.rename(torrentId, file.name, newName).then(callback).catch(callback)
     }, err => {
       if (err) {
         return winston.error(err)
@@ -53,7 +49,7 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
 
       // Rename the root folder
       if (files[0].name.indexOf('/') !== -1) {
-        transmission.rename(torrentId, p.dirname(files[0].name), torrent.newName, winston.error)
+        transmission.rename(torrentId, p.dirname(files[0].name), torrent.newName).catch(winston.error)
       }
 
       // Log the message and send a notification about what has been completed
@@ -64,5 +60,5 @@ database.getTorrent(process.env.TR_TORRENT_NAME).then(torrent => {
       // Remove the entry and save the database
       database.deleteTorrent(torrentId)
     })
-  })
+  }).catch(winston.error)
 })
