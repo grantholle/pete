@@ -14,7 +14,11 @@
     "tv shows",
     "automation",
     "torrents",
-    "hornberger"
+    "hornberger",
+    "transmission",
+    "download",
+    "flexget",
+    "couchpotato"
   ],
   "author": "Grant Holle (https://github.com/grantholle)",
   "repository": "https://github.com/grantholle/pete",
