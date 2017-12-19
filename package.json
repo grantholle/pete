@@ -33,7 +33,7 @@
     "lodash": "^4.17.4",
     "lokijs": "^1.5.1",
     "moment": "^2.19.2",
-    "moviedb": "git+https://github.com/grantholle/moviedb.git",
+    "moviedb-promise": "^1.0.0",
     "parse-torrent-title": "^1.0.0",
     "pushbullet": "^1.4.3",
     "rarbg": "^1.1.0",
