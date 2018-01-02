@@ -33,10 +33,15 @@ program
     // If no show was chosen to search,
     if (!tmdbId) {
       // Get the watchlist and choose the show from the list
-      const watchlist = await moviedb.accountTvWatchlist()
-      const answer = await inquirer.prompt(prompts.shows(watchlist.results))
+      try {
+        const watchlist = await moviedb.accountTvWatchlist()
+        const answer = await inquirer.prompt(prompts.shows(watchlist.results))
 
-      return commands.show(config, answer.show, options)
+        return commands.show(config, answer.show, options)
+      } catch (err) {
+        winston.error(err)
+        process.exit()
+      }
     }
 
     options.season = options.season ? parseFloat(options.season) : 1
@@ -51,19 +56,27 @@ program
 
     winston.info(`Searching for ${tmdbId}...`)
 
-    moviedb.searchTv({ query: tmdbId }).then(results => {
-      if (results.total_results === 1) {
-        return commands.show(config, results.results[0].id, options)
-      }
+    let results
 
-      // Prompt the user to select the correct show
-      inquirer.prompt(prompts.shows(results.results)).then(answer => {
-        commands.show(config, answer.show, options)
-      })
-    }).catch(err => {
+    try {
+      results = await moviedb.searchTv({ query: tmdbId })
+    } catch (err) {
       winston.error(err)
       process.exit()
-    })
+    }
+
+    if (results.total_results === 1) {
+      return commands.show(config, results.results[0].id, options)
+    }
+
+    // Prompt the user to select the correct show
+    try {
+      const answer = await inquirer.prompt(prompts.shows(results.results))
+      commands.show(config, answer.show, options)
+    } catch (err) {
+      winston.error(err)
+      process.exit()
+    }
   })
 
 program
