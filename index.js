@@ -22,14 +22,23 @@ program
   .action(() => commands.tv(config))
 
 program
-  .command('show <tmdb_id|show_name>')
-  .description('Fetches episodes for a show based on the TMdb ID or show name')
+  .command('show [tmdb_id|show_name]')
+  .description('Fetches episodes for a show based on the TMdb ID or show name. If no show is provided, choose from your watchlist.')
   .option('-s, --season <season>', 'The season at which to start', null, 1)
   .option('-e, --episode <episode>', 'The episode at which to start', null, 1)
   .option('-q, --quality <quality>', 'The desired quality you want', null, 'HDTV')
   .option('-f, --force', 'Download despite existing entries in database')
   .option('-o, --one', 'Download only the specified season and episode of the show')
-  .action((tmdbId, options) => {
+  .action(async (tmdbId, options) => {
+    // If no show was chosen to search,
+    if (!tmdbId) {
+      // Get the watchlist and choose the show from the list
+      const watchlist = await moviedb.accountTvWatchlist()
+      const answer = await inquirer.prompt(prompts.shows(watchlist.results))
+
+      return commands.show(config, answer.show, options)
+    }
+
     options.season = options.season ? parseFloat(options.season) : 1
     options.episode = options.episode ? parseFloat(options.episode) : 1
     options.quality = options.quality ? options.quality : 'HDTV'
