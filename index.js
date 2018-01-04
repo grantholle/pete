@@ -18,8 +18,36 @@ program
 
 program
   .command('tv')
+  .option('-c, --choose', 'Only check a selection of shows from your watchlist')
   .description('Fetches your TMdb TV watchlist and finds new episodes of your shows')
-  .action(() => commands.tv(config))
+  .action(async options => {
+    // Get TV watchlist
+    winston.info('Retrieving TV show watchlist...')
+
+    let watchlist
+
+    try {
+      watchlist = await moviedb.accountTvWatchlist()
+    } catch (err) {
+      winston.error(err)
+      return process.exit()
+    }
+
+    if (watchlist.results.length === 0) {
+      winston.info('No shows found in watchlist!')
+      return process.exit()
+    }
+
+    winston.info(`${watchlist.total_results} ${watchlist.total_results > 1 ? 'shows are' : 'show is'} in your watchlist.`)
+
+    // Select the shows to check
+    if (options.choose) {
+      const answer = await inquirer.prompt(prompts.watchlistShows(watchlist.results))
+      watchlist.results = watchlist.results.filter(s => answer.shows.indexOf(s.id) !== -1)
+    }
+
+    commands.tv(config, watchlist)
+  })
 
 program
   .command('show [tmdb_id|show_name]')
