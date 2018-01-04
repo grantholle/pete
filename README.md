@@ -47,8 +47,8 @@ pete -h
   Commands:
 
     install|i                           Sets up the local filesystem, authorizes TMdb api credentials, and other misc installation requirements
-    tv                                  Fetches your TMdb TV watchlist and finds new episodes of your shows
-    show [options] <tmdb_id|show_name>  Fetches episodes for a show based on the TMdb ID or show name
+    tv [options]                        Fetches your TMdb TV watchlist and finds new episodes of your shows
+    show [options] [tmdb_id|show_name]  Fetches episodes for a show based on the TMdb ID or show name. If no show is provided, choose from your watchlist.
     movies                              Download the movies in your TMdb movie watchlist
     movie|m <tmdb_id|title>             Search for a movie to start downloading based on title or TMdb ID
     tv-setup|s                          Runs the configuation setup for the shows in your TV watchlist
@@ -72,11 +72,16 @@ pete s
 
 ### `tv`
 
+Fetches the shows in your tv watchlist, checks if there's any new episodes that you need download. It will use the starting season, episode and quality that was configured when running `pete tv-setup`. If no existing configuration is found, it will start at the most current season episode 1 in HDTV quality.
+
+There's also a flag, `-c|--choose`, that enables you to be selective of the shows you want to check.
+
 ```bash
-# Fetches the shows in your tv watchlist, checks if there's any new episodes that you need download
-# It will use the starting season, episode and quality that was configured when running `pete tv-setup`.
-# If no existing configuration is found, it will start at the most current season episode 1 in HDTV quality
+# Checks everything, useful for crons and things because it isn't interactive
 pete tv
+
+# Interactively choose the shows you want to check
+pete tv -c
 ```
 
 ### `show`
