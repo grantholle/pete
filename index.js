@@ -149,6 +149,7 @@ program
 program
   .command('clean-torrents')
   .alias('c')
+  .option('-c, --cache', 'Removes all saved torrents in the database')
   .description('Removes torrents that have met or exceeded the configured ratio limit')
   .action(commands.clean)
 

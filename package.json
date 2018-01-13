@@ -1,6 +1,6 @@
 {
   "name": "pete",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Automatically download items in your TMdb watchlists",
   "main": "index.js",
   "bin": {
