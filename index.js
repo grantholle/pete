@@ -116,22 +116,21 @@ program
   .command('movie <tmdb_id|title>')
   .alias('m')
   .description('Search for a movie to start downloading based on title or TMdb ID')
-  .action(tmdbId => {
+  .action(async tmdbId => {
     if (!isNaN(parseFloat(tmdbId))) {
       return commands.movie(config, tmdbId)
     }
 
     winston.info(`Searching for ${tmdbId}...`)
 
-    moviedb.searchMovie({ query: tmdbId }).then(results => {
-      if (results.total_results === 1) {
-        return commands.movie(config, results.results[0].id)
-      }
+    const results = await moviedb.searchMovie({ query: tmdbId })
 
-      inquirer.prompt(prompts.movies(results.results)).then(answer => {
-        commands.movie(config, answer.movie)
-      })
-    })
+    if (results.total_results === 1) {
+      return commands.movie(config, results.results[0].id)
+    }
+
+    const answer = await inquirer.prompt(prompts.movies(results.results))
+    commands.movie(config, answer.movie)
   })
 
 program
