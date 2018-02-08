@@ -37,7 +37,7 @@ database.getTorrent(torrentId).then(async torrent => {
     // Rename it appropriately (TV episode or Movie title and year)
     // We're only interested in non-sample video files
     if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) === -1) {
-      return callback()
+      continue
     }
 
     const newName = file.name.search(/(sample|rarbg\.com)/gi) === -1 ? torrent.newName + p.extname(file.name) : `unwanted ${index}`
