@@ -31,9 +31,12 @@ database.getTorrent(torrentId).then(async torrent => {
 
   const torrentInfo = torrents.torrents[0]
   const files = torrentInfo.files
+  let index = 0
 
   // Iterate over all the files and rename appropriately
   for (const file of files) {
+    index++
+
     // Rename it appropriately (TV episode or Movie title and year)
     // We're only interested in non-sample video files
     if (file.name.search(/.(mkv|avi|mp4|mov)$/gi) === -1) {
