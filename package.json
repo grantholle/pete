@@ -24,7 +24,6 @@
   "repository": "https://github.com/grantholle/pete",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.0",
     "colors": "^1.1.2",
     "commander": "^2.13.0",
     "eztv-b": "^1.0.2",
