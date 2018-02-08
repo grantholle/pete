@@ -23,7 +23,7 @@ database.getTorrent(torrentId).then(async torrent => {
   }
 
   // Fetch the torrent info
-  const torrents = transmission.get(torrentId)
+  const torrents = await transmission.get(torrentId)
 
   if (!torrents.torrents[0]) {
     return winston.error(`Could not get information for ${torrent.newName}`)
