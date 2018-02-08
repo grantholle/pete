@@ -65,4 +65,4 @@ database.getTorrent(torrentId).then(async torrent => {
 
   // Remove the entry and save the database
   database.deleteTorrent(torrentId)
-})
+}).catch(winston.error)
