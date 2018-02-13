@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 const program = require('commander')
-const config = require('./lib/config')
-const commands = require('./lib/commands')
-const winston = require('./lib/logger')
-const moviedb = require('./lib/moviedb')
+const config = require('./src/config')
+const commands = require('./src/commands')
+const winston = require('./src/logger')
+const moviedb = require('./src/moviedb')
 const inquirer = require('inquirer')
-const prompts = require('./lib/prompts').searchResults
+const prompts = require('./src/prompts').searchResults
 
 program.version(require('./package.json').version)
 

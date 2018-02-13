@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict'
 
-const winston = require('../lib/logger')
-const notify = require('../lib/pushbullet').finished
-const database = require('../lib/database')
-const transmission = require('../lib/transmission')
+const winston = require('../src/logger')
+const notify = require('../src/pushbullet').finished
+const database = require('../src/database')
+const transmission = require('../src/transmission')
 const p = require('path')
 const ptt = require('parse-torrent-title')
-const labelize = require('../lib/show-label')
+const labelize = require('../src/show-label')
 const torrentId = parseFloat(process.env.TR_TORRENT_ID)
 
 // Load database
