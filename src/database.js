@@ -188,7 +188,8 @@ const updateCollection = async item => {
   await loadDatabase()
   await media.update(item)
 
-  return saveDatabase()
+  await saveDatabase()
+  return item
 }
 
 /**
@@ -267,10 +268,12 @@ const deleteTorrents = async () => {
 }
 
 module.exports = {
-  get media () {
+  async media () {
+    await loadDatabase()
     return media
   },
   get torrents () {
+    initializeDatabase()
     return torrents
   },
   loadDatabase,

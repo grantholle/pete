@@ -79,7 +79,8 @@ module.exports = async config => {
     let answer = { overwrite: true }
 
     // If the show has an existing configuration, confirm overwrite
-    if (database.media.findOne({ tmdb_id: show.id })) {
+    const media = await database.media()
+    if (media.findOne({ tmdb_id: show.id })) {
       answer = await inquirer.prompt(prompts.confirm(show.name))
     }
 
