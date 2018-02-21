@@ -10,7 +10,8 @@
     "lint": "./node_modules/.bin/standard",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "serve": "nodemon --watch src/web/ src/web/server/app.js"
   },
   "keywords": [
     "movies",
@@ -36,6 +37,8 @@
     "babel-plugin-transform-vue-jsx": "^3.5.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
+    "base64-js": "^1.2.3",
+    "bitfield-base64": "file:../bitfield",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.1",
     "colors": "^1.1.2",
@@ -63,6 +66,7 @@
     "postcss-import": "^11.1.0",
     "postcss-loader": "^2.1.0",
     "postcss-url": "^7.3.0",
+    "pretty-bytes": "^4.0.2",
     "pushbullet": "^1.4.3",
     "rarbg": "^1.1.1",
     "rimraf": "^2.6.2",
@@ -77,12 +81,14 @@
     "vue-loader": "^14.1.1",
     "vue-router": "^3.0.1",
     "vue-style-loader": "^3.1.2",
+    "vue-tabs-component": "^1.4.0",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",
     "webpack-dev-server": "^2.11.1",
     "webpack-merge": "^4.1.1",
     "winston": "^2.4.0",
+    "ws": "^4.0.0",
     "yify-search": "^1.0.0"
   },
   "devDependencies": {

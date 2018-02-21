@@ -1,34 +1,30 @@
 'use strict'
 
 const transmission = require('../../../transmission')
+const winston = require('../../../logger')
 
 module.exports = {
-  async index (req, res) {
-    const { torrents } = await transmission.get()
+  connection (ws, req) {
+    ws.isAlive = true
 
-    res.json({ data: torrents })
-  },
+    ws.on('message', data => {
+      ws.isAlive = true
 
-  async show (req, res) {
-    const { torrents } = await transmission.get(req.params.id)
+      try {
+        const parsed = JSON.parse(data)
+      } catch (err) {
+        winston.error(err)
+      }
+    })
 
-    res.json({ data: torrents[0] })
-  },
+    ws.sendInterval = setInterval(async () => {
+      const { torrents } = await transmission.get()
 
-  async addMagnet (req, res) {
-    const result = await transmission.addMagnet(req.body)
-
-    res.json({ data: result })
-  },
-
-  async rename (req, res) {
-    const result = await transmission.rename()
-
-    res.json({ data: result })
-  },
-
-  async remove (req, res) {
-
-    res.json({ data: result })
+      try {
+        ws.send(JSON.stringify(torrents))
+      } catch (err) {
+        winston.error(err)
+      }
+    }, 2000)
   }
 }

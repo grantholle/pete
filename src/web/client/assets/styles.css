@@ -29,6 +29,65 @@
  * @import "components/forms";
  */
 
+body {
+  padding-top: 5rem;
+}
+
+.main-nav .router-link-active {
+  @apply .text-indigo-darkest .bg-grey-lighter;
+}
+
+.btn {
+  @apply .bg-indigo .text-white .py-2 .px-4 .font-semibold .rounded .border-b-2 .border-indigo-darker;
+}
+
+.btn:hover {
+  @apply .bg-indigo-dark;
+  outline: none;
+}
+
+.btn:active, .btn:focus {
+  outline: none;
+}
+
+.btn:active {
+  @apply .border-0 .shadow-inner;
+  margin-top: 2px;
+}
+
+p {
+  @apply .text-black .mb-4;
+}
+
+.torrent-card {
+  @apply .bg-white .p-6 .mb-4 .shadow;
+}
+
+.torrent-info-badge {
+  @apply .float-left .text-xs .text-blue-dark .leading-none .rounded-sm .block .py-1 .px-2 .mr-2 .border .border-blue;
+}
+
+.tabs-component-tab a {
+  @apply .text-grey-darkest .no-underline .block .text-center .bg-grey-light .px-4 .py-2 .mr-2 .mb-2;
+  outline: none;
+}
+
+.tabs-component-tabs {
+  @apply .list-reset .flex .flex-row .mt-4;
+}
+
+.table {
+  @apply .w-full;
+}
+
+.table th {
+  @apply .text-left .py-1 .pr-3 .border-b;
+}
+
+.table td {
+  @apply .py-1;
+}
+
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.
