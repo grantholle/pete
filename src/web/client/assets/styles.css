@@ -88,6 +88,31 @@ p {
   @apply .py-1;
 }
 
+label {
+  @apply .inline-block .text-sm .mb-1;
+}
+
+.input-control {
+  @apply .bg-white .block .p-2 .mb-3 .border .border-grey .rounded .w-full;
+}
+
+.input-control:focus {
+  @apply .border-indigo;
+  outline: none;
+}
+
+.input-control:active {
+  outline: none;
+}
+
+select.input-control {
+  @apply .appearance-none .pr-8 .mb-0;
+}
+
+.input-control[disabled] {
+  @apply .bg-grey-light .text-grey-dark .cursor-not-allowed;
+}
+
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.

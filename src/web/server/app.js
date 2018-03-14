@@ -35,6 +35,7 @@ app.use((err, req, res, next) => {
 app.use('/api', routes.shows)
 app.use('/api', routes.watchlist)
 app.use('/api', routes.moviedb)
+app.use('/api', routes.config)
 
 try {
   wss.on('connection', transmissionController.connection)

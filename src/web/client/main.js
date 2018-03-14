@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import { Tabs, Tab } from 'vue-tabs-component'
+import PeteSelect from './components/PeteSelect'
 
 Vue.component('tabs', Tabs)
 Vue.component('tab', Tab)
+Vue.component(PeteSelect.name, PeteSelect)
 
 Vue.config.productionTip = false
 

@@ -1,6 +1,7 @@
 'use strict'
 
 const moviedb = require('../../../moviedb')
+const MovieDb = require('moviedb-promise')
 
 module.exports = {
   async searchTv (req, res) {
@@ -25,5 +26,25 @@ module.exports = {
     const info = await moviedb.tvSeasonInfo(req.params)
 
     res.json({ data: info })
+  },
+
+  async token (req, res) {
+    const tmdb = new MovieDb(req.body)
+    let results
+
+    try {
+      results = await tmdb.requestToken()
+    } catch (err) {
+      return res.status(422).json({ message: err.message })
+    }
+
+    res.json({ data: results })
+  },
+
+  async session (req, res) {
+    const tmdb = new MovieDb(req.body)
+    const sessionId = await tmdb.session()
+
+    res.json({ data: sessionId })
   }
 }

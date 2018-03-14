@@ -6,11 +6,9 @@ const moviedb = require('../../../moviedb')
 module.exports = {
   async index (req, res) {
     const media = await database.media()
-    // const watchlist = await moviedb.accountTvWatchlist()
 
     res.json({
       data: media.find({ start_season: { $finite: true } })
-      // watchlist: watchlist.results
     })
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="mb-8 bg-grey-darker shadow-md lg:fixed lg:pin-t w-full">
+    <nav class="mb-8 bg-grey-darker shadow-md lg:fixed lg:pin-t w-full z-50">
       <div class="container m-auto flex items-center justify-between flex-wrap">
         <router-link class="mr-6 inline-block text-2xl font-mono h-full text-white no-underline hover:underline hover:text-indigo-lightest" to="/">Pete</router-link>
 
@@ -23,6 +23,8 @@ export default {
   data () {
     return {
       links: [
+        { to: '/shows', text: 'Shows' },
+        { to: '/config', text: 'Config' },
         { to: '/transmission', text: 'Transmission' }
       ]
     }

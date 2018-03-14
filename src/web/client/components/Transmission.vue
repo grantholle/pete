@@ -167,8 +167,12 @@ export default {
       }
     })
 
-    setInterval(() => {
-      socket.send(JSON.stringify({ args: 'ping' }))
+    const pingInterval = setInterval(() => {
+      try {
+        socket.send(JSON.stringify({ args: 'ping' }))
+      } catch (err) {
+        clearInterval(pingInterval)
+      }
     }, 25000)
   },
 
