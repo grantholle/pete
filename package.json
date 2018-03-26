@@ -35,7 +35,7 @@
     "moviedb-promise": "^1.2.1",
     "parse-torrent-title": "^1.1.0",
     "pushbullet": "^1.4.3",
-    "rarbg": "git+https://github.com/grantholle/rarbg.git",
+    "rarbg": "^1.2.1",
     "sanitize-filename": "^1.6.1",
     "transmission-promise": "^1.1.1",
     "winston": "^2.4.0",
