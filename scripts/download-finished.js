@@ -17,6 +17,12 @@ database.getTorrent(torrentId).then(async torrent => {
   if (!torrent) {
     const parsed = ptt.parse(process.env.TR_TORRENT_NAME)
 
+    // If there isn't a year either,
+    // don't modify the files
+    if (!parsed.year) {
+      return
+    }
+
     torrent = {
       newName: parsed.season ? `${parsed.title} - ${labelize(parsed.season, parsed.episode)}` : `${parsed.title} (${parsed.year})`
     }
