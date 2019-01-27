@@ -38,7 +38,7 @@
     "rarbg": "^1.2.6",
     "sanitize-filename": "^1.6.1",
     "transmission-promise": "^1.1.2",
-    "winston": "^3.2.0",
+    "winston": "^2.4.0",
     "yify-search": "^1.0.0"
   },
   "devDependencies": {
